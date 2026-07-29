@@ -82,7 +82,18 @@ Validate expected output and correctness criteria.
 
 - Aspire2A should use a real Git clone of this repository at the remote project root.
 - Commit rules: only commit the scripts/results/etc when the build/run is SUCCESFULL. For unsuccessful cases, record the errors, your corresponding implemented solution clearly as you try to patch the errors yourself. The agent have permission to self patch build/run errors yourself unless specified otherwise.
+- Manage the local PC clone and Aspire2A clone with this procedure:
+  - Before starting work in either environment, run `git status` and `git pull --ff-only`.
+  - Before committing, run `git status` and inspect the relevant diff.
+  - Commit only reviewed/useful scripts, plans, progress notes, extracted results, metadata, and logs.
+  - Prefer committing and pushing from the local PC.
+  - After pushing from one environment, pull with `git pull --ff-only` in the other environment before continuing work there.
+  - If `git pull --ff-only` fails because the clones diverged, stop and inspect instead of creating a merge commit.
 - Prefer local Git operations.
 - Do not store GitHub credentials on Aspire2A.
 - Do not push without explicit user approval.
 - Do not commit raw temporary files unless requested.
+
+# Section start-up action
+
+At the start of every session, read the latest progress report in ```/progress``` to get the context on what is completed and what we are doing next.
