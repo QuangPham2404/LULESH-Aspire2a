@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#PBS -N build_lulesh_cce13_craympich8
+#PBS -j n
+#PBS -o build_lulesh_cce13_craympich8.o
+#PBS -e build_lulesh_cce13_craympich8.e
+#PBS -l select=1:ncpus=8
+#PBS -l walltime=00:20:00
+
+set -euo pipefail
+
+cd "$PBS_O_WORKDIR"
+
+module list
+
+export BUILD_JOBS="${BUILD_JOBS:-8}"
+./build_lulesh.sh

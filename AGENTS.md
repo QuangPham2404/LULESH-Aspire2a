@@ -89,6 +89,11 @@ Validate expected output and correctness criteria.
   - Prefer committing and pushing from the local PC.
   - After pushing from one environment, pull with `git pull --ff-only` in the other environment before continuing work there.
   - If `git pull --ff-only` fails because the clones diverged, stop and inspect instead of creating a merge commit.
+- Local-to-Aspire2A script workflow:
+  - When Codex creates or updates build scripts, PBS scripts, run scripts, extraction scripts, or planning files locally for remote execution, Codex must commit and push those local changes first, after user approval if required.
+  - Before using those scripts on Aspire2A, Codex must SSH into Aspire2A, go to the remote project root, and run `git pull --ff-only`.
+  - Do not run stale local-only scripts on Aspire2A. The remote clone should receive local script changes through Git before build/run work starts.
+  - This rule covers the local PC to Aspire2A direction. Aspire2A to local result handling may use a separate workflow decided later.
 - Prefer local Git operations.
 - Do not store GitHub credentials on Aspire2A.
 - Do not push without explicit user approval.
