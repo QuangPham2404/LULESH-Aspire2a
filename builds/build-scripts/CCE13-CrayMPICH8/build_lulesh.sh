@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export PATH="/usr/local/bin:/usr/bin:/bin:${PATH:-}"
+export PATH="${PATH:-}:/usr/local/bin:/usr/bin:/bin"
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "${SCRIPT_DIR}/../../.." && pwd)
@@ -62,11 +62,6 @@ for tool in git cmake make CC cc ftn mpirun mpiexec; do
 done
 record ""
 
-if ! command -v git >/dev/null 2>&1; then
-  record "ERROR: git is not available on PATH."
-  exit 1
-fi
-
 if ! command -v cmake >/dev/null 2>&1; then
   record "ERROR: cmake is not available on PATH."
   exit 1
@@ -82,26 +77,41 @@ record_cmd CC --version
 record_cmd CC --cray-print-opts=all
 record ""
 
-if [[ ! -d "${SOURCE_DIR}/.git" ]]; then
-  record "== cloning LULESH source =="
-  record_cmd git clone "${LULESH_REPO_URL}" "${SOURCE_DIR}"
-else
-  record "== existing LULESH source detected =="
-  record "No source update performed by default. Set UPDATE_SOURCE=1 to fetch and fast-forward."
+if [[ ! -f "${SOURCE_DIR}/CMakeLists.txt" ]]; then
+  record "ERROR: LULESH source not found at ${SOURCE_DIR}."
+  record "Clone or copy the source before submitting the PBS build job."
+  exit 1
 fi
 
+record "== existing LULESH source detected =="
 cd "${SOURCE_DIR}"
 
 if [[ "${UPDATE_SOURCE:-0}" == "1" ]]; then
+  if ! command -v git >/dev/null 2>&1; then
+    record "ERROR: UPDATE_SOURCE=1 was requested, but git is not available in this PBS environment."
+    exit 1
+  fi
   record "== updating LULESH source =="
   record_cmd git fetch origin
   record_cmd git checkout "${LULESH_REF}"
   record_cmd git pull --ff-only
-else
+elif command -v git >/dev/null 2>&1 && [[ -d "${SOURCE_DIR}/.git" ]]; then
   record_cmd git checkout "${LULESH_REF}"
 fi
 
-LULESH_COMMIT=$(git rev-parse HEAD)
+if command -v git >/dev/null 2>&1 && [[ -d "${SOURCE_DIR}/.git" ]]; then
+  LULESH_COMMIT=$(git rev-parse HEAD)
+elif [[ -f "${SOURCE_DIR}/.git/HEAD" ]]; then
+  LULESH_HEAD=$(cat "${SOURCE_DIR}/.git/HEAD")
+  if [[ "${LULESH_HEAD}" == ref:\ * ]]; then
+    LULESH_REF_FILE="${SOURCE_DIR}/.git/${LULESH_HEAD#ref: }"
+    LULESH_COMMIT=$(cat "${LULESH_REF_FILE}" 2>/dev/null || printf "unknown")
+  else
+    LULESH_COMMIT="${LULESH_HEAD}"
+  fi
+else
+  LULESH_COMMIT="unknown"
+fi
 record "lulesh_commit: ${LULESH_COMMIT}"
 record ""
 
