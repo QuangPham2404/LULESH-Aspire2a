@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#PBS -N lulesh_template
+#PBS -j n
+#PBS -o lulesh_template.o
+#PBS -e lulesh_template.e
+
+set -euo pipefail
+
+cd "$PBS_O_WORKDIR"
+
+echo "Template only. Copy this file into a real experiment directory before use."
+exit 1

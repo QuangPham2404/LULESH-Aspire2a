@@ -1,0 +1,19 @@
+{
+  "experiment_id": "<experiment_id>",
+  "pbs_job_id": "",
+  "timestamp": "",
+  "hostname_or_node_allocation": "",
+  "compiler": "",
+  "compiler_version": "",
+  "mpi_implementation": "",
+  "mpi_version": "",
+  "loaded_modules": [],
+  "build_flags": "",
+  "input_parameters": {},
+  "requested_resources": {},
+  "runtime_seconds": null,
+  "correctness_result": "",
+  "stdout_path": "",
+  "stderr_path": "",
+  "exit_status": null
+}

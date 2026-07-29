@@ -1,0 +1,21 @@
+# Build source trees and installed packages
+builds/source/*
+!builds/source/README.md
+!builds/source/SOURCES.md
+
+builds/extra-packages/*
+!builds/extra-packages/README.md
+
+# Generated build directories
+build/
+cmake-build-*/
+
+# Compiled artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.mod
