@@ -19,3 +19,7 @@ cmake-build-*/
 *.dll
 *.exe
 *.mod
+
+# PBS stdout logs are text evidence, not compiled object files.
+!experiments/**/*.o
+!builds/build-scripts/**/output/*.o
