@@ -102,3 +102,23 @@ Validate expected output and correctness criteria.
 # Section start-up action
 
 At the start of every session, read the latest progress report in ```/progress``` to get the context on what is completed and what we are doing next.
+
+# Technical notes for workflow
+
+- Always do git clone on login node first before writing the build script and building. After that we use the path of the cloned source code to build
+- Build-script PBS output policy:
+  - Keep all PBS `.o` and `.e` files for build jobs.
+  - Direct build-job stdout/stderr into an `output/` directory inside the relevant build-script directory.
+  - Use user-friendly output names such as `<build_name>_v1.o`, `<build_name>_v1.e`, `<build_name>_1.1.o`, `<build_name>_v1.1.e`, `<build_name>_v1-final.o`, and `<build_name>_v1-final.e` instead of opaque code-like names when practical.
+- Build README error-handling policy:
+  - Use the build-script directory `README.md` to record build metadata, experiment intent, errors, and solutions.
+  - Record failures and patch attempts on an attempt-by-attempt basis.
+  - After each failed build/run attempt, immediately update the relevant `README.md` with:
+    - attempt label, such as `<build_name>_v1`, `<build_name>_v1.1`, or `<build_name>_v1-final`;
+    - PBS job ID;
+    - stdout and stderr paths;
+    - observed error;
+    - suspected cause;
+    - patch or workflow change applied;
+    - result of the next attempt, once known.
+  - Do not wait until the end of a long debugging sequence to summarize errors. Record each attempt while the context is fresh.
