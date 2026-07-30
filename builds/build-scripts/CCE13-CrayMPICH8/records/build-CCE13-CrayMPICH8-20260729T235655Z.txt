@@ -1,0 +1,33 @@
+experiment_id: build-CCE13-CrayMPICH8-20260729T235655Z
+timestamp_utc: 20260729T235655Z
+hostname: x1001c0s3b0n0
+repo_root: /scratch/users/ntu/pham0094/LULESH-Aspire2a
+source_dir: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH
+build_dir: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH/build-CCE13-CrayMPICH8-Release
+install_prefix: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH/install-CCE13-CrayMPICH8-Release
+lulesh_repo_url: https://github.com/LLNL/LULESH.git
+lulesh_ref: master
+build_type: Release
+with_mpi: On
+with_openmp: On
+with_silo: Off
+
+== loaded modules ==
+Currently Loaded Modulefiles:
+  1) craype-x86-rome          6) craype/2.7.15
+  2) libfabric/1.11.0.4.125   7) cray-dsmml/0.2.2
+  3) craype-network-ofi       8) cray-mpich/8.1.15
+  4) perftools-base/22.04.0   9) cray-pals/1.1.6
+  5) cce/13.0.2              10) PrgEnv-cray/8.3.3
+
+== toolchain ==
+git: not found
+cmake: /usr/bin/cmake
+make: /usr/bin/make
+CC: /opt/cray/pe/craype/2.7.15/bin/CC
+cc: /usr/bin/cc
+ftn: /opt/cray/pe/craype/2.7.15/bin/ftn
+mpirun: /opt/cray/pe/pals/1.1.6/bin/mpirun
+mpiexec: /opt/cray/pe/pals/1.1.6/bin/mpiexec
+
+ERROR: git is not available on PATH.

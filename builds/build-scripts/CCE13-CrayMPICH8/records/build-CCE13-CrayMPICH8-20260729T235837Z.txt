@@ -1,0 +1,56 @@
+experiment_id: build-CCE13-CrayMPICH8-20260729T235837Z
+timestamp_utc: 20260729T235837Z
+hostname: x1001c0s3b0n0
+repo_root: /scratch/users/ntu/pham0094/LULESH-Aspire2a
+source_dir: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH
+build_dir: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH/build-CCE13-CrayMPICH8-Release
+install_prefix: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH/install-CCE13-CrayMPICH8-Release
+lulesh_repo_url: https://github.com/LLNL/LULESH.git
+lulesh_ref: master
+build_type: Release
+with_mpi: On
+with_openmp: On
+with_silo: Off
+
+== loaded modules ==
+Currently Loaded Modulefiles:
+  1) craype-x86-rome          6) craype/2.7.15
+  2) libfabric/1.11.0.4.125   7) cray-dsmml/0.2.2
+  3) craype-network-ofi       8) cray-mpich/8.1.15
+  4) perftools-base/22.04.0   9) cray-pals/1.1.6
+  5) cce/13.0.2              10) PrgEnv-cray/8.3.3
+
+== toolchain ==
+git: not found
+cmake: /bin/cmake
+make: /bin/make
+CC: /opt/cray/pe/craype/2.7.15/bin/CC
+cc: /opt/cray/pe/craype/2.7.15/bin/cc
+ftn: /opt/cray/pe/craype/2.7.15/bin/ftn
+mpirun: /opt/cray/pe/pals/1.1.6/bin/mpirun
+mpiexec: /opt/cray/pe/pals/1.1.6/bin/mpiexec
+
+$ cmake --version
+cmake version 3.26.5
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+$ CC --version
+Cray clang version 13.0.2  (a5f4c8bb61d2be51079c8815e5195c7827c51639)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /opt/cray/pe/cce/13.0.2/cce-clang/x86_64/share/../bin
+$ CC --cray-print-opts=all
+-I/opt/cray/pe/mpich/8.1.15/ofi/cray/10.0/include -I/opt/cray/pe/dsmml/0.2.2/dsmml/include -L/opt/cray/pe/mpich/8.1.15/ofi/cray/10.0/lib -L/opt/cray/pe/dsmml/0.2.2/dsmml/lib -Wl,--as-needed,-lmpi_cray,--no-as-needed -Wl,--as-needed,-ldsmml,--no-as-needed -L/opt/cray/pe/cce/13.0.2/cce/x86_64/lib/pkgconfig/../ -Wl,--as-needed,-lstdc++,--no-as-needed -Wl,--as-needed,-lpgas-shmem,--no-as-needed -lfi -lquadmath -lmodules -lfi -lcraymath -lf -lu -lcsup 
+
+== existing LULESH source detected ==
+lulesh_commit: 3e01c40b3281aadb7f996525cdd4a3354f6d3801
+
+== cmake configure ==
+$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/opt/cray/pe/craype/2.7.15/bin/CC -DMPI_CXX_COMPILER=/opt/cray/pe/craype/2.7.15/bin/CC -DWITH_MPI=On -DWITH_OPENMP=On -DWITH_SILO=Off -DCMAKE_INSTALL_PREFIX=/scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH/install-CCE13-CrayMPICH8-Release /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH
+-- The CXX compiler identification is Clang 13.0.1
+-- Cray Programming Environment 2.7.15 CXX
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/cray/pe/craype/2.7.15/bin/CC - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
