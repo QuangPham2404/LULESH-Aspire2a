@@ -283,3 +283,52 @@ experiments/<run_name>/
   - the expected output files are present in the designated `outputs/` directory; and
   - normal application output is present.
 - Correctness validation is required before accepting benchmark results and will be handled in a later workflow stage.
+
+## Step 5: Log results
+
+- At the end of a build/run session, record results only. Do not perform
+  optimization analysis or update planning conclusions in this step.
+
+- The `results/` directory should contain:
+
+```text
+results/
+├── README.md
+├── metrics.csv
+├── RESULTS.md
+└── scripts/
+```
+
+- `results/README.md` must retain the directory description and usage guidance
+  already documented in that file. It must also define the result data
+  contract, including:
+  - what one row in `metrics.csv` represents;
+  - required columns and their meanings;
+  - units and naming conventions;
+  - how run status, failures, and repeated measurements are represented; and
+  - which raw `.o` and `.e` files provide the source for each row.
+
+- The CSV structure is application- and experiment-specific. Before each new
+  optimization sweep, decide the required columns with the user and document
+  the decision in `results/README.md`. New completed runs normally add rows.
+  Add or change columns only after discussing and recording the schema change
+  with the user.
+
+- `metrics.csv` is the structured source of truth for extracted numeric and
+  run metadata. Keep repeated runs as separate rows unless a different rule
+  has been agreed and documented.
+
+- `results/scripts/` contains scripts used to extract and transform values
+  from raw experiment output. These scripts must follow the general script
+  documentation and naming rules.
+
+- Create or update `RESULTS.md` from `metrics.csv` after the CSV is prepared.
+  `RESULTS.md` is the human-readable report and may contain tables, concise
+  status summaries, correctness information, and links to raw output files.
+  Its values must come from `metrics.csv`; it must not become an independent
+  data source.
+
+- Analysis is deferred to a later session. The user will instruct the agent
+  when to copy or summarize results from `results/` into `planning/`. The
+  results-logging session must not add interpretation, optimization decisions,
+  or next-experiment conclusions to `planning/`.
