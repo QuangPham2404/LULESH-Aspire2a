@@ -1,0 +1,159 @@
+probe_id: probe_compute_node_hardware_v1
+pbs_job_id: 15089995.pbs101
+timestamp_utc: 2026-08-04T23:44:06Z
+hostname: x1001c3s2b1n0
+requested_resources: select=1:ncpus=1:mem=1gb, walltime=00:05:00
+
+== PBS allocation ==
+PBS_O_HOST=asp2a-login-ntu02.head.cm.asp2a.nscc.sg
+PBS_O_WORKDIR=/scratch/users/ntu/pham0094/LULESH-Aspire2a
+
+== loaded modules ==
+Currently Loaded Modulefiles:
+  1) craype-x86-rome          6) craype/2.7.15
+  2) libfabric/1.11.0.4.125   7) cray-dsmml/0.2.2
+  3) craype-network-ofi       8) cray-mpich/8.1.15
+  4) perftools-base/22.04.0   9) cray-pals/1.1.6
+  5) cce/13.0.2              10) PrgEnv-cray/8.3.3
+
+== operating system ==
+Linux x1001c3s2b1n0 4.18.0-553.125.1.el8_10.x86_64 #1 SMP Mon May 18 09:54:35 EDT 2026 x86_64 x86_64 x86_64 GNU/Linux
+NAME="Red Hat Enterprise Linux"
+VERSION="8.10 (Ootpa)"
+ID="rhel"
+ID_LIKE="fedora"
+VERSION_ID="8.10"
+PLATFORM_ID="platform:el8"
+PRETTY_NAME="Red Hat Enterprise Linux 8.10 (Ootpa)"
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:redhat:enterprise_linux:8::baseos"
+HOME_URL="https://www.redhat.com/"
+DOCUMENTATION_URL="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8"
+BUG_REPORT_URL="https://bugzilla.redhat.com/"
+
+REDHAT_BUGZILLA_PRODUCT="Red Hat Enterprise Linux 8"
+REDHAT_BUGZILLA_PRODUCT_VERSION=8.10
+REDHAT_SUPPORT_PRODUCT="Red Hat Enterprise Linux"
+REDHAT_SUPPORT_PRODUCT_VERSION="8.10"
+
+== CPU and topology ==
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              256
+On-line CPU(s) list: 0-255
+Thread(s) per core:  2
+Core(s) per socket:  64
+Socket(s):           2
+NUMA node(s):        8
+Vendor ID:           AuthenticAMD
+CPU family:          25
+Model:               1
+Model name:          AMD EPYC 7713 64-Core Processor
+Stepping:            1
+CPU MHz:             2586.446
+CPU max MHz:         3720.7029
+CPU min MHz:         1500.0000
+BogoMIPS:            3992.21
+Virtualization:      AMD-V
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            512K
+L3 cache:            32768K
+NUMA node0 CPU(s):   0-15,128-143
+NUMA node1 CPU(s):   16-31,144-159
+NUMA node2 CPU(s):   32-47,160-175
+NUMA node3 CPU(s):   48-63,176-191
+NUMA node4 CPU(s):   64-79,192-207
+NUMA node5 CPU(s):   80-95,208-223
+NUMA node6 CPU(s):   96-111,224-239
+NUMA node7 CPU(s):   112-127,240-255
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf pni pclmulqdq monitor ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 invpcid_single hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr wbnoinvd amd_ppin brs arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload vgif v_spec_ctrl umip pku ospke vaes vpclmulqdq rdpid overflow_recov succor smca fsrm
+-- numactl -H --
+available: 8 nodes (0-7)
+node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
+node 0 size: 63863 MB
+node 0 free: 42624 MB
+node 1 cpus: 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159
+node 1 size: 64502 MB
+node 1 free: 50289 MB
+node 2 cpus: 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+node 2 size: 64502 MB
+node 2 free: 31963 MB
+node 3 cpus: 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+node 3 size: 64490 MB
+node 3 free: 31534 MB
+node 4 cpus: 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
+node 4 size: 64502 MB
+node 4 free: 1021 MB
+node 5 cpus: 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223
+node 5 size: 64502 MB
+node 5 free: 46679 MB
+node 6 cpus: 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239
+node 6 size: 64502 MB
+node 6 free: 57406 MB
+node 7 cpus: 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255
+node 7 size: 64491 MB
+node 7 free: 54628 MB
+node distances:
+node   0   1   2   3   4   5   6   7 
+  0:  10  12  12  12  32  32  32  32 
+  1:  12  10  12  12  32  32  32  32 
+  2:  12  12  10  12  32  32  32  32 
+  3:  12  12  12  10  32  32  32  32 
+  4:  32  32  32  32  10  12  12  12 
+  5:  32  32  32  32  12  10  12  12 
+  6:  32  32  32  32  12  12  10  12 
+  7:  32  32  32  32  12  12  12  10 
+
+== memory ==
+              total        used        free      shared  buff/cache   available
+Mem:          503Gi       127Gi       308Gi       5.1Gi        67Gi       368Gi
+Swap:            0B          0B          0B
+MemTotal:       527728772 kB
+MemAvailable:   385987108 kB
+SwapTotal:             0 kB
+HugePages_Total:       0
+Hugepagesize:       2048 kB
+
+== CPU online state ==
+0-255
+
+== accelerator tools ==
+nvidia-smi: not found
+rocm-smi: not found
+
+== network interfaces ==
+lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+enp65s0          UP             00:40:a6:8b:27:9d <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> 
+hsn0             UP             02:00:00:00:3b:f1 <BROADCAST,MULTICAST,UP,LOWER_UP> 
+bond0            UP             00:40:a6:8b:27:9d <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> 
+docker0          DOWN           02:42:5a:51:75:8e <NO-CARRIER,BROADCAST,MULTICAST,UP> 
+
+== available toolchain commands ==
+CC: /opt/cray/pe/craype/2.7.15/bin/CC
+gcc: /bin/gcc
+clang: not found
+c++: /bin/c++
+mpicxx: not found
+mpirun: /opt/cray/pe/pals/1.1.6/bin/mpirun
+mpiexec: /opt/cray/pe/pals/1.1.6/bin/mpiexec
+cmake: /bin/cmake
+
+== compiler and MPI versions ==
+-- CC --
+Cray clang version 13.0.2  (a5f4c8bb61d2be51079c8815e5195c7827c51639)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+-- gcc --
+gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-21)
+Copyright (C) 2018 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+-- mpirun --
+mpiexec version 1.1.6
+-- mpiexec --
+mpiexec version 1.1.6
+-- cmake --
+cmake version 3.26.5
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).

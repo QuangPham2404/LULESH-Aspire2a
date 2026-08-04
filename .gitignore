@@ -25,3 +25,5 @@ cmake-build-*/
 !experiments/**/outputs/*.e
 !builds/build-scripts/**/outputs/*.o
 !builds/build-scripts/**/outputs/*.e
+!scripts/outputs/*.o
+!scripts/outputs/*.e
