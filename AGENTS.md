@@ -106,6 +106,55 @@ At the start of every session, read the latest progress report in ```/progress``
 
 # Technical notes for workflow
 
+## General notes (applied for all steps, unless specified otherwise)
+
+- Naming convention:
+  - Use one stable build or experiment name throughout the README, script
+    names, PBS job names, output names, and build or binary paths.
+  - Use kebab-case for directories, for example
+    `CCE13-CrayMPICH8-newWF`.
+  - Use lowercase snake_case for shell and PBS filenames, matching the
+    existing scripts, for example `build_lulesh_newwf.pbs`.
+  - Use `<name>_v1`, `<name>_v1.1`, and `<name>_v1-final` for attempts.
+  - Use `<name>_v1.o` and `<name>_v1.e` for PBS output files.
+
+- Script documentation and comments:
+  - Every script must begin with a short comment describing its purpose,
+    expected working directory, inputs, outputs, and important assumptions.
+  - Divide scripts into clear, commented sections so the user can follow the
+    workflow and make manual patches when needed.
+  - Comments should explain purpose, reasoning, or non-obvious behavior. Do
+    not add comments that merely restate obvious commands.
+
+- Build `.sh` scripts should use this order:
+  1. Shell safety settings.
+  2. Build configuration and paths.
+  3. Helper functions, if needed.
+  4. Environment and tool checks.
+  5. Source and build-directory checks.
+  6. Configure command.
+  7. Build command.
+  8. Expected executable check.
+
+- Build `.pbs` scripts should use this order:
+  1. PBS job name, output/error paths, and resource requests.
+  2. Shell safety settings.
+  3. Change to the submitted script directory.
+  4. Print or load the required environment.
+  5. Call the corresponding build `.sh` script.
+
+- Run `.pbs` scripts should use this order:
+  1. PBS job name, output/error paths, and resource requests.
+  2. Shell safety settings.
+  3. Change to the submitted script directory.
+  4. Define and print experiment metadata.
+  5. Define and verify the successful build binary.
+  6. Print the environment and tool versions.
+  7. Execute the application through the required launcher.
+
+- Keep build and run scripts consistent in shell options, comment style,
+  metadata keys, variable naming, and attempt/output naming.
+
 ## Step 1: Planning
 - We skip this step for now, the planning will be instructed by user right in the session
 
