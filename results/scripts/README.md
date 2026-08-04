@@ -1,6 +1,8 @@
 # `results/scripts/`
 
-Place scripts for extracting, parsing, cleaning, or plotting result files here.
+Scripts in this directory extract and transform values from raw experiment
+output into files under `results/`. Each script should document its input
+files, output files, expected schema, and application-specific assumptions.
 
-These scripts should read raw output from `experiments/` and write structured
-files under `results/`.
+The current LULESH extraction script processes only the new-workflow baseline
+run and intentionally excludes the older smoke run.
