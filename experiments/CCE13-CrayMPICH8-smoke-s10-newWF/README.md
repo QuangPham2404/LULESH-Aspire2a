@@ -9,6 +9,7 @@ successful `CCE13-CrayMPICH8-newWF` Release build with SILO disabled.
 
 - experiment ID: `CCE13-CrayMPICH8-smoke-s10-newWF`
 - build: `CCE13-CrayMPICH8-newWF`
+- successful build binary: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-CCE13-CrayMPICH8-newWF-Release/lulesh2.0`
 - compiler environment: `PrgEnv-cray/8.3.3`
 - compiler: Cray `CC`, CCE 13.0.2
 - MPI implementation: Cray MPICH 8.1.15
@@ -21,7 +22,7 @@ successful `CCE13-CrayMPICH8-newWF` Release build with SILO disabled.
 
 ### CCE13-CrayMPICH8-smoke-s10-newWF_v1
 
-- Status: pending build completion
+- Status: ready to submit
 - PBS job ID: pending
 - stdout: `outputs/CCE13-CrayMPICH8-smoke-s10-newWF_v1.o`
 - stderr: `outputs/CCE13-CrayMPICH8-smoke-s10-newWF_v1.e`

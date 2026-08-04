@@ -24,9 +24,14 @@ Aspire2A Cray environment. SILO is disabled and the build type is Release.
 
 ### CCE13-CrayMPICH8-newWF_v1
 
-- Status: pending
-- PBS job ID: pending
+- Status: success
+- PBS job ID: `15086004.pbs101`
+- Timestamp: `2026-08-04T09:32:29Z`
+- Hostname/node: `x1001c6s1b0n0`
+- PBS exit status: `0`
+- PBS walltime: `00:00:13`
 - stdout: `outputs/CCE13-CrayMPICH8-newWF_v1.o`
 - stderr: `outputs/CCE13-CrayMPICH8-newWF_v1.e`
-- Observed error: none yet
-- Patch or workflow change: first execution of the defined workflow
+- binary: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-CCE13-CrayMPICH8-newWF-Release/lulesh2.0`
+- Observed error: none
+- Result: Release build completed successfully with MPI and OpenMP enabled and SILO disabled.
