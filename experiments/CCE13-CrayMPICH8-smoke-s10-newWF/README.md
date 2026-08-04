@@ -22,9 +22,23 @@ successful `CCE13-CrayMPICH8-newWF` Release build with SILO disabled.
 
 ### CCE13-CrayMPICH8-smoke-s10-newWF_v1
 
-- Status: ready to submit
-- PBS job ID: pending
+- Status: success
+- PBS job ID: `15086010.pbs101`
+- Timestamp: `2026-08-04T09:33:38Z`
+- Hostname/node: `x1002c4s7b0n0`
+- PBS exit status: `0`
+- PBS walltime: `00:00:06`
 - stdout: `outputs/CCE13-CrayMPICH8-smoke-s10-newWF_v1.o`
 - stderr: `outputs/CCE13-CrayMPICH8-smoke-s10-newWF_v1.e`
-- Observed error: none yet
-- Patch or workflow change: first execution of the defined workflow
+- Command: `mpirun -np 1 <successful-build-binary> -s 10`
+- Observed error: none
+- Normal application output: present
+- Problem size: `10`
+- MPI tasks: `1`
+- Iteration count: `231`
+- Final Origin Energy: `2.720531e+04`
+- MaxAbsDiff: `2.273737e-12`
+- TotalAbsDiff: `1.659646e-11`
+- MaxRelDiff: `4.649603e-14`
+- LULESH elapsed time: `0.35 s`
+- FOM: `656.99887 z/s`
