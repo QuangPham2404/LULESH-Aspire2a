@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# Read-only PBS probe for CPU, memory, NUMA, accelerator, network, and software
+# details; submit from the repository root; writes raw stdout/stderr to the
+# scripts/outputs directory; assumes standard Linux inspection tools exist.
+#PBS -N probe_lulesh_compute_node
+#PBS -j n
+#PBS -o scripts/outputs/probe_compute_node_hardware_v1.o
+#PBS -e scripts/outputs/probe_compute_node_hardware_v1.e
+#PBS -l select=1:ncpus=1:mem=1gb
+#PBS -l walltime=00:05:00
+
+set -euo pipefail
+
+cd "${PBS_O_WORKDIR}"
+
+echo "probe_id: probe_compute_node_hardware_v1"
+echo "pbs_job_id: ${PBS_JOBID:-unknown}"
+echo "timestamp_utc: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+echo "hostname: $(hostname)"
+echo "requested_resources: select=1:ncpus=1:mem=1gb, walltime=00:05:00"
+echo
+
+echo '== PBS allocation =='
+env | grep -E '^(PBS_NODE|PBS_NNODES|PBS_NCPUS|PBS_NTASKS|PBS_O_HOST|PBS_O_WORKDIR)=' \
+  | sort || true
+echo
+
+echo '== loaded modules =='
+module list 2>&1
+echo
+
+echo '== operating system =='
+uname -a
+if [[ -r /etc/os-release ]]; then
+  cat /etc/os-release
+fi
+echo
+
+echo '== CPU and topology =='
+lscpu
+if command -v numactl >/dev/null 2>&1; then
+  echo '-- numactl -H --'
+  numactl -H
+fi
+echo
+
+echo '== memory =='
+free -h
+grep -E '^(MemTotal|MemAvailable|SwapTotal|HugePages_Total|Hugepagesize):' /proc/meminfo
+echo
+
+echo '== CPU online state =='
+if [[ -r /sys/devices/system/cpu/online ]]; then
+  cat /sys/devices/system/cpu/online
+fi
+echo
+
+echo '== accelerator tools =='
+for tool in nvidia-smi rocm-smi; do
+  if command -v "${tool}" >/dev/null 2>&1; then
+    echo "-- ${tool} --"
+    "${tool}" || true
+  else
+    echo "${tool}: not found"
+  fi
+done
+echo
+
+echo '== network interfaces =='
+if command -v ip >/dev/null 2>&1; then
+  ip -brief link
+fi
+echo
+
+echo '== available toolchain commands =='
+for tool in CC gcc clang c++ mpicxx mpirun mpiexec cmake; do
+  if command -v "${tool}" >/dev/null 2>&1; then
+    echo "${tool}: $(command -v "${tool}")"
+  else
+    echo "${tool}: not found"
+  fi
+done
+echo
+
+echo '== compiler and MPI versions =='
+for tool in CC gcc clang mpicxx mpirun mpiexec cmake; do
+  if command -v "${tool}" >/dev/null 2>&1; then
+    echo "-- ${tool} --"
+    "${tool}" --version 2>&1 | head -n 3 || true
+  fi
+done
