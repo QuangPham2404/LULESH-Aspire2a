@@ -12,6 +12,8 @@
 | AOCC-CrayMPICH8-baseline-s30 | AOCC-CrayMPICH8 | AOCC-CrayMPICH8-baseline-s30_v1 | 15093830.pbs101 | `-s 30` | 32 | 778.03348 | passed | success |
 | Intel-CrayMPICH8-baseline-s30 | Intel-CrayMPICH8 | Intel-CrayMPICH8-baseline-s30_v1 | 15093831.pbs101 | `-s 30` | 25 | 1019.1226 | failed | success |
 | GNU-CrayMPICH8-baseline-s30 | GNU-CrayMPICH8 | GNU-CrayMPICH8-baseline-s30_v1 | 15093832.pbs101 | `-s 30` | 27 | 941.23381 | passed | success |
+| CCE13-CrayMPICH8-O2-s30 | CCE13-CrayMPICH8-O2 | CCE13-CrayMPICH8-O2-s30_v1 | 15096939.pbs101 | `-s 30` | 22 | 1167.0982 | passed | success |
+| CCE13-CrayMPICH8-Ofast-s30 | CCE13-CrayMPICH8-Ofast | CCE13-CrayMPICH8-Ofast-s30_v1 | 15096940.pbs101 | `-s 30` | 17 | 1484.2957 | failed | success |
 
 ## Provenance
 
@@ -151,10 +153,45 @@
 - `stderr_path`: `experiments/GNU-CrayMPICH8-baseline-s30/outputs/GNU-CrayMPICH8-baseline-s30_v1.e`
 - `build_stdout_path`: `builds/build-scripts/GNU-CrayMPICH8/outputs/GNU-CrayMPICH8_v1.o`
 - `build_stderr_path`: `builds/build-scripts/GNU-CrayMPICH8/outputs/GNU-CrayMPICH8_v1.e`
+### CCE13-CrayMPICH8-O2-s30 / CCE13-CrayMPICH8-O2-s30_v1
+
+- `timestamp_utc`: `2026-08-05T23:45:56Z`
+- `hostname`: `x1001c6s0b1n1`
+- `source_commit`: `3e01c40b3281aadb7f996525cdd4a3354f6d3801`
+- `compiler`: `Cray CC`
+- `compiler_version`: `13.0.2`
+- `mpi_implementation`: `Cray MPICH`
+- `mpi_version`: `8.1.15`
+- `mpi_launcher_version`: `1.1.6`
+- `loaded_modules`: `craype-x86-rome;craype/2.7.15;libfabric/1.11.0.4.125;cray-dsmml/0.2.2;craype-network-ofi;cray-mpich/8.1.15;perftools-base/22.04.0;cray-pals/1.1.6;cce/13.0.2;PrgEnv-cray/8.3.3`
+- `build_flags`: `Release;OPTIMIZATION_FLAGS=-O2 -DNDEBUG;WITH_MPI=On;WITH_OPENMP=On;WITH_SILO=Off`
+- `binary_path`: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-CCE13-CrayMPICH8-O2/lulesh2.0`
+- `stdout_path`: `experiments/CCE13-CrayMPICH8-O2-s30/outputs/CCE13-CrayMPICH8-O2-s30_v1.o`
+- `stderr_path`: `experiments/CCE13-CrayMPICH8-O2-s30/outputs/CCE13-CrayMPICH8-O2-s30_v1.e`
+- `build_stdout_path`: `builds/build-scripts/CCE13-CrayMPICH8-O2/outputs/CCE13-CrayMPICH8-O2_v1.1.o`
+- `build_stderr_path`: `builds/build-scripts/CCE13-CrayMPICH8-O2/outputs/CCE13-CrayMPICH8-O2_v1.1.e`
+### CCE13-CrayMPICH8-Ofast-s30 / CCE13-CrayMPICH8-Ofast-s30_v1
+
+- `timestamp_utc`: `2026-08-05T23:45:57Z`
+- `hostname`: `x1001c6s7b1n0`
+- `source_commit`: `3e01c40b3281aadb7f996525cdd4a3354f6d3801`
+- `compiler`: `Cray CC`
+- `compiler_version`: `13.0.2`
+- `mpi_implementation`: `Cray MPICH`
+- `mpi_version`: `8.1.15`
+- `mpi_launcher_version`: `1.1.6`
+- `loaded_modules`: `craype-x86-rome;craype/2.7.15;libfabric/1.11.0.4.125;cray-dsmml/0.2.2;craype-network-ofi;cray-mpich/8.1.15;perftools-base/22.04.0;cray-pals/1.1.6;cce/13.0.2;PrgEnv-cray/8.3.3`
+- `build_flags`: `Release;OPTIMIZATION_FLAGS=-Ofast -DNDEBUG;WITH_MPI=On;WITH_OPENMP=On;WITH_SILO=Off`
+- `binary_path`: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-CCE13-CrayMPICH8-Ofast/lulesh2.0`
+- `stdout_path`: `experiments/CCE13-CrayMPICH8-Ofast-s30/outputs/CCE13-CrayMPICH8-Ofast-s30_v1.o`
+- `stderr_path`: `experiments/CCE13-CrayMPICH8-Ofast-s30/outputs/CCE13-CrayMPICH8-Ofast-s30_v1.e`
+- `build_stdout_path`: `builds/build-scripts/CCE13-CrayMPICH8-Ofast/outputs/CCE13-CrayMPICH8-Ofast_v1.1.o`
+- `build_stderr_path`: `builds/build-scripts/CCE13-CrayMPICH8-Ofast/outputs/CCE13-CrayMPICH8-Ofast_v1.1.e`
 
 ## Correctness notes
 
 - `Intel-CrayMPICH8-smoke-s10` / `Intel-CrayMPICH8-smoke-s10_v1` completed with `correctness_status=failed` because the recorded correctness fields were not all finite (MaxRelDiff: `-nan`). No patch was attempted; further investigation is required.
 - `Intel-CrayMPICH8-baseline-s30` / `Intel-CrayMPICH8-baseline-s30_v1` completed with `correctness_status=failed` because the recorded correctness fields were not all finite (MaxRelDiff: `-nan`). No patch was attempted; further investigation is required.
+- `CCE13-CrayMPICH8-Ofast-s30` / `CCE13-CrayMPICH8-Ofast-s30_v1` completed with `correctness_status=failed` because the recorded correctness fields were not all finite (MaxRelDiff: `-nan`). No patch was attempted; further investigation is required.
 
 No optimization analysis is included. Analysis belongs in a later planning session.

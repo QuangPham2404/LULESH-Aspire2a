@@ -13,7 +13,16 @@ OpenMP thread. Correctness is compared with the CCE13 Release baseline.
 
 ## Run attempts
 
-No run attempt has been submitted yet.
+### `CCE13-CrayMPICH8-O2-s30_v1`
+
+- PBS job: `15096939.pbs101`
+- PBS state/exit: `F / 0`
+- node: `x1001c6s0b1n1`
+- stdout: `outputs/CCE13-CrayMPICH8-O2-s30_v1.o`
+- stderr: `outputs/CCE13-CrayMPICH8-O2-s30_v1.e`
+- LULESH elapsed time: `22 s`
+- FOM: `1167.0982 z/s`
+- correctness: passed; `MaxRelDiff = 1.482369e-12`
 
 ## RUNTIME error-patching record
 

@@ -26,7 +26,17 @@ disables SILO, and writes the PBS build record to `outputs/`.
   root rather than this build directory
 - patch: submit the retry from this build-script directory; preserve the
   attempt-specific filenames
-- retry: `CCE13-CrayMPICH8-Ofast_v1.1` pending
+- retry: `CCE13-CrayMPICH8-Ofast_v1.1`
+
+### `CCE13-CrayMPICH8-Ofast_v1.1`
+
+- PBS job: `15096936.pbs101`
+- PBS state/exit: `F / 0`
+- node: `x1002c6s3b0n0`
+- stdout: `outputs/CCE13-CrayMPICH8-Ofast_v1.1.o`
+- stderr: `outputs/CCE13-CrayMPICH8-Ofast_v1.1.e`
+- result: build completed successfully; generated flags were
+  `-fopenmp -Ofast -DNDEBUG`
 
 ## BUILD error-patching record
 

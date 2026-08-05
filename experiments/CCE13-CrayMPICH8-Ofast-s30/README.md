@@ -14,7 +14,18 @@ because `-Ofast` may enable unsafe floating-point transformations.
 
 ## Run attempts
 
-No run attempt has been submitted yet.
+### `CCE13-CrayMPICH8-Ofast-s30_v1`
+
+- PBS job: `15096940.pbs101`
+- PBS state/exit: `F / 0`
+- node: `x1001c6s7b1n0`
+- stdout: `outputs/CCE13-CrayMPICH8-Ofast-s30_v1.o`
+- stderr: `outputs/CCE13-CrayMPICH8-Ofast-s30_v1.e`
+- LULESH elapsed time: `17 s`
+- FOM: `1484.2957 z/s`
+- correctness: failed because `MaxRelDiff = -nan`
+- scientific-correctness handling: result preserved; no patch attempted; the
+  run is excluded from valid optimization selection pending investigation
 
 ## RUNTIME error-patching record
 
