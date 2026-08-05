@@ -64,10 +64,16 @@ The current columns are:
 | `build_stdout_path` | Raw build stdout path | repository-relative path |
 | `build_stderr_path` | Raw build stderr path | repository-relative path |
 
-The schema is application- and experiment-specific. Before each new
-optimization sweep, decide required columns with the user and document the
-decision here. New completed runs normally add rows. Add or change columns
-only after discussing and recording the schema change with the user.
+The schema is application- and experiment-specific. Before a new optimization
+sweep, decide required columns with the user and document the decision here.
+Once a schema is decided, compatible runs may proceed automatically and add
+rows. Pause for user input only when new columns, units, or result semantics
+are needed. Add or change columns only after discussing and recording the
+schema change with the user.
+
+`results/scripts/extract_lulesh_results.py` appends compatible runs without
+overwriting existing rows and rejects duplicate `(experiment_id, attempt)`
+records. It regenerates `RESULTS.md` from the complete CSV.
 
 Do not rely on PBS exit status alone. Confirm that expected LULESH output is
 present and record the observed correctness status.
