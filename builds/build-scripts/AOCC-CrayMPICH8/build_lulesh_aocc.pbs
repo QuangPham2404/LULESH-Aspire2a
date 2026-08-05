@@ -3,8 +3,8 @@
 # output directory present; inputs are the synchronized repository and modules.
 #PBS -N build_lulesh_aocc
 #PBS -j n
-#PBS -o outputs/AOCC-CrayMPICH8_v1.1.o
-#PBS -e outputs/AOCC-CrayMPICH8_v1.1.e
+#PBS -o outputs/AOCC-CrayMPICH8_v1.2.o
+#PBS -e outputs/AOCC-CrayMPICH8_v1.2.e
 #PBS -l select=1:ncpus=8:mem=4gb
 #PBS -l walltime=00:20:00
 
@@ -12,5 +12,6 @@ set -euo pipefail
 
 cd "${PBS_O_WORKDIR}"
 module swap PrgEnv-cray PrgEnv-aocc/8.3.3
+export SOURCE_COMMIT="3e01c40b3281aadb7f996525cdd4a3354f6d3801"
 export BUILD_JOBS="${BUILD_JOBS:-8}"
 ./build_lulesh_aocc.sh

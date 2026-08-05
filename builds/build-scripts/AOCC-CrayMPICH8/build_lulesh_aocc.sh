@@ -10,6 +10,7 @@ SOURCE_DIR="${SOURCE_DIR:-${REPO_ROOT}/builds/source/LULESH-newWF}"
 BUILD_TYPE="${BUILD_TYPE:-Release}"
 BUILD_DIR="${BUILD_DIR:-${SOURCE_DIR}/build-${BUILD_NAME}-${BUILD_TYPE}}"
 INSTALL_PREFIX="${INSTALL_PREFIX:-${SOURCE_DIR}/install-${BUILD_NAME}-${BUILD_TYPE}}"
+SOURCE_COMMIT="${SOURCE_COMMIT:-unknown}"
 
 record() {
   printf '%s\n' "$*"
@@ -27,7 +28,7 @@ record "repo_root: ${REPO_ROOT}"
 record "source_dir: ${SOURCE_DIR}"
 record "build_dir: ${BUILD_DIR}"
 record "install_prefix: ${INSTALL_PREFIX}"
-record "source_commit: $(git -C "${SOURCE_DIR}" rev-parse HEAD 2>/dev/null || printf 'unknown')"
+record "source_commit: ${SOURCE_COMMIT}"
 record "build_type: ${BUILD_TYPE}"
 record "with_mpi: On"
 record "with_openmp: On"
@@ -35,7 +36,7 @@ record "with_silo: Off"
 record "requested_build_jobs: ${BUILD_JOBS:-8}"
 record
 
-for tool in cmake CC mpirun mpiexec git; do
+for tool in cmake CC mpirun mpiexec; do
   command -v "${tool}" >/dev/null 2>&1 || {
     record "ERROR: required tool not found: ${tool}" >&2
     exit 1
@@ -84,4 +85,3 @@ else
   record "ERROR: expected binary not found at ${BUILD_DIR}/lulesh2.0" >&2
   exit 1
 fi
-

@@ -15,6 +15,7 @@ module swap PrgEnv-cray PrgEnv-aocc/8.3.3
 
 REPO_ROOT="/home/users/ntu/pham0094/scratch/LULESH-Aspire2a"
 BINARY="${REPO_ROOT}/builds/source/LULESH-newWF/build-AOCC-CrayMPICH8-Release/lulesh2.0"
+SOURCE_COMMIT="3e01c40b3281aadb7f996525cdd4a3354f6d3801"
 export OMP_NUM_THREADS=1
 
 echo "experiment_id: AOCC-CrayMPICH8-smoke-s10"
@@ -23,14 +24,14 @@ echo "pbs_job_id: ${PBS_JOBID:-unknown}"
 echo "timestamp_utc: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 echo "hostname: $(hostname)"
 echo "binary: ${BINARY}"
-echo "source_commit: $(git -C "${REPO_ROOT}/builds/source/LULESH-newWF" rev-parse HEAD 2>/dev/null || printf 'unknown')"
+echo "source_commit: ${SOURCE_COMMIT}"
 echo "input_parameters: -s 10"
 echo "mpi_tasks: 1"
 echo "openmp_threads: ${OMP_NUM_THREADS}"
 echo "requested_resources: select=1:ncpus=1:mpiprocs=1:mem=1gb, walltime=00:10:00"
 echo
 
-for tool in mpirun git; do
+for tool in mpirun; do
   command -v "${tool}" >/dev/null 2>&1 || {
     echo "ERROR: required tool not found: ${tool}" >&2
     exit 1
@@ -53,4 +54,3 @@ echo
 
 echo '== run =='
 mpirun -np 1 "${BINARY}" -s 10
-

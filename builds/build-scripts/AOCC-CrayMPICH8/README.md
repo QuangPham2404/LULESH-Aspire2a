@@ -37,6 +37,24 @@ MPICH, MPI, and OpenMP enabled, and SILO disabled.
 - Patch/workflow change: submit from
   `builds/build-scripts/AOCC-CrayMPICH8/` and use new attempt-specific output
   names.
-- Next attempt: `AOCC-CrayMPICH8_v1.1`, pending submission.
+- Next attempt: `AOCC-CrayMPICH8_v1.1`.
+
+### AOCC-CrayMPICH8_v1.1
+
+- Status: failed during preflight
+- PBS job ID: `15090033.pbs101`
+- PBS state: `F`
+- PBS exit status: `1`
+- Timestamp: `2026-08-05T00:03:30Z`
+- Hostname/node: `x1001c7s6b1n0`
+- PBS walltime: `00:00:02`
+- stdout: `outputs/AOCC-CrayMPICH8_v1.1.o`
+- stderr: `outputs/AOCC-CrayMPICH8_v1.1.e`
+- Observed error: `git` was not available in the compute-node job PATH.
+- Suspected cause: the build preflight required Git even though Git is not
+  needed by the compiler or build commands.
+- Patch/workflow change: remove Git from the compute-node tool requirement and
+  pass the verified source commit as explicit PBS metadata.
+- Next attempt: `AOCC-CrayMPICH8_v1.2`, pending submission.
 
 PBS `.o` and `.e` files in `outputs/` are the authoritative raw build records.
