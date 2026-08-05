@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Run the CCE13 -Ofast LULESH binary with -s 30, one MPI rank, and one OpenMP
+# thread; expected working directory is this experiment directory; output is
+# the PBS stdout/stderr pair containing metadata and application results.
+#PBS -N lulesh_cce13_ofast_s30
+#PBS -j n
+#PBS -o outputs/CCE13-CrayMPICH8-Ofast-s30_v1.o
+#PBS -e outputs/CCE13-CrayMPICH8-Ofast-s30_v1.e
+#PBS -l select=1:ncpus=1:mpiprocs=1:mem=16gb
+#PBS -l walltime=00:10:00
+
+set -euo pipefail
+cd "${PBS_O_WORKDIR}"
+
+REPO_ROOT="/home/users/ntu/pham0094/scratch/LULESH-Aspire2a"
+BINARY="${REPO_ROOT}/builds/source/LULESH-newWF/build-CCE13-CrayMPICH8-Ofast/lulesh2.0"
+SOURCE_COMMIT="3e01c40b3281aadb7f996525cdd4a3354f6d3801"
+EXPERIMENT_ID="CCE13-CrayMPICH8-Ofast-s30"
+ATTEMPT="${EXPERIMENT_ID}_v1"
+INPUT_PARAMETERS="-s 30"
+REQUESTED_RESOURCES="select=1:ncpus=1:mpiprocs=1:mem=16gb, walltime=00:10:00"
+export OMP_NUM_THREADS=1
+
+echo "experiment_id: ${EXPERIMENT_ID}"
+echo "attempt: ${ATTEMPT}"
+echo "pbs_job_id: ${PBS_JOBID:-unknown}"
+echo "timestamp_utc: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+echo "hostname: $(hostname)"
+echo "binary: ${BINARY}"
+echo "source_commit: ${SOURCE_COMMIT}"
+echo "input_parameters: ${INPUT_PARAMETERS}"
+echo "mpi_tasks: 1"
+echo "openmp_threads: ${OMP_NUM_THREADS}"
+echo "requested_resources: ${REQUESTED_RESOURCES}"
+echo
+
+command -v mpirun >/dev/null 2>&1 || { echo "ERROR: required tool not found: mpirun" >&2; exit 1; }
+[[ -x "${BINARY}" ]] || { echo "ERROR: expected binary missing or not executable: ${BINARY}" >&2; exit 1; }
+
+echo '== loaded modules =='
+module list 2>&1
+echo
+echo '== toolchain =='
+for tool in CC mpirun mpiexec; do
+  if command -v "${tool}" >/dev/null 2>&1; then echo "${tool}: $(command -v "${tool}")"; else echo "${tool}: unknown"; fi
+done
+CC --version 2>/dev/null || true
+mpirun --version
+echo "omp_num_threads: ${OMP_NUM_THREADS}"
+echo
+
+echo '== run =='
+mpirun -np 1 "${BINARY}" -s 30

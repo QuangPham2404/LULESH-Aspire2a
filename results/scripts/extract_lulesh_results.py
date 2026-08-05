@@ -100,6 +100,7 @@ def extract_row(args: argparse.Namespace) -> dict[str, str]:
         "loaded_modules": loaded_modules,
         "build_flags": (
             f"{value(r'^build_type:\s*(.+)$', build_stdout, 'build type')};"
+            f"OPTIMIZATION_FLAGS={optional(r'^optimization_flags:\s*(.+)$', build_stdout)};"
             f"WITH_MPI={value(r'^with_mpi:\s*(.+)$', build_stdout, 'MPI build flag')};"
             f"WITH_OPENMP={value(r'^with_openmp:\s*(.+)$', build_stdout, 'OpenMP build flag')};"
             f"WITH_SILO={value(r'^with_silo:\s*(.+)$', build_stdout, 'SILO build flag')}"

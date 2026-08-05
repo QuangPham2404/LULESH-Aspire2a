@@ -1,95 +1,161 @@
-# LULESH Optimization Plans
+# LULESH Optimization Plan
 
-## Completed Optimization Steps
+## Scope and baseline
 
-- Established the application overview, source revision, baseline build/run
-  workflow, and correctness markers for LULESH source revision
-  `3e01c40b3281aadb7f996525cdd4a3354f6d3801`.
-- Completed a one-rank, one-thread `-s 10` programming-environment sweep using
-  Cray CCE 13.0.2, AOCC 3.2.0, GNU 11.2.0, and Intel 2024.0 with Cray MPICH
-  8.1.15.
-- Confirmed correctness for the CCE, AOCC, and GNU runs.
-- Recorded the Intel run as completed but correctness-failed because
-  `MaxRelDiff = -nan`. It must not be treated as a valid performance result.
-- Established AOCC as the current fastest valid environment in the recorded
-  smoke runs: `0.26 s` and `895.58097 z/s`.
-- Established that the current measurements are single samples from a very
-  small one-rank workload and are not yet sufficient for strong performance
-  conclusions.
+This plan optimizes the CCE13 configuration using the larger `-s 30`
+workload. The selected baseline is:
 
-## Current Optimization Plan
+- compiler: Cray CCE 13.0.2;
+- MPI: Cray MPICH 8.1.15;
+- source revision: `3e01c40b3281aadb7f996525cdd4a3354f6d3801`;
+- build: `Release`, with MPI and OpenMP enabled and SILO disabled;
+- input: `-s 30`;
+- MPI ranks: `1`;
+- OpenMP threads: `1`;
+- recorded elapsed time: `20 s`;
+- recorded FOM: `1281.9581 z/s`;
+- correctness: passed, with `MaxRelDiff = 1.482369e-12`.
 
-### Executive summary of plan
-Build a repeatable workflow for compiling, running, validating, and optimizing
-LULESH on Aspire2A, then characterize the effects of compiler, OpenMP, MPI, and
-hybrid parallel configurations.
+The previous `-s 30` environment comparison identified CCE13 as the fastest
+valid result. The Intel result is excluded from optimization comparisons
+because it reported `MaxRelDiff = -nan`.
 
-### Detailed steps
+## Important Release-build finding
 
-1. Establish a stable valid baseline.
-   - Use the AOCC build as the primary baseline candidate because it is
-     currently the fastest valid environment.
-   - Retain CCE and GNU as comparison baselines.
-   - Increase the problem size from `-s 10` to a larger controlled size such
-     as `-s 30` so runtime measurements are less dominated by startup and
-     scheduler noise.
-   - Repeat each baseline configuration several times with one MPI task and
-     one OpenMP thread.
-   - Keep the source revision, Release build, input, and requested resources
-     fixed while repeating measurements.
+The current CCE13 CMake `Release` configuration already injects:
 
-2. Measure OpenMP scaling with the AOCC baseline.
-   - Keep one MPI task and the same binary and problem size.
-   - Test a controlled thread series such as `OMP_NUM_THREADS=1,2,4,8,16,32`.
-   - Record runtime, FOM, correctness, node allocation, and all environment
-     metadata for every thread count.
+```text
+-O3 -DNDEBUG
+```
 
-3. Compare MPI and hybrid parallelism.
-   - Compare equivalent configurations such as one MPI task with many
-     threads, multiple MPI tasks with fewer threads, and MPI-only layouts.
-   - Keep total resources and problem size controlled so the comparison tests
-     parallel layout rather than unrelated resource changes.
-   - Use the Aspire2A hardware information, including its 128 physical cores
-     and eight NUMA nodes, to guide later single-node placement experiments.
+With OpenMP enabled, the generated compile flags are:
 
-4. Compare compiler optimization flags.
-   - First verify the actual compiler flags emitted by the current CMake
-     `Release` configuration.
-   - Test flag variants one compiler at a time, beginning with AOCC.
-   - Start with conservative versus higher optimization levels, then test
-     supported AMD EPYC 7713 architecture-specific tuning.
-   - Treat each flag variant as a separate build and run experiment.
-   - Require correctness validation for every variant; timing alone cannot
-     establish a successful optimization.
+```text
+-fopenmp -O3 -DNDEBUG
+```
 
-5. Investigate Intel correctness separately before using Intel for performance
-   comparisons.
-   - Preserve the existing Intel result as a completed,
-     correctness-failed record.
-   - Do not use its faster runtime or FOM as an optimization conclusion while
-     `MaxRelDiff` remains non-finite.
-   - Any future Intel work should first be a correctness investigation and
-     should follow the scientific-correctness reporting procedure.
+Consequently, the existing CCE13 Release binary is the `-O3` case. Any new
+optimization build must use a separate build directory and must record the
+actual generated flags, so that results are not confused with the existing
+baseline.
 
-## Results and Analysis
+## Experimental procedure
 
-The current results contain four one-rank, one-thread `-s 10` runs:
+### 1. Establish timing stability
 
-| Environment | Elapsed (s) | FOM (z/s) | Correctness |
-| --- | ---: | ---: | --- |
-| Cray CCE 13.0.2 | 0.35 | 656.99887 | passed |
-| AOCC 3.2.0 | 0.26 | 895.58097 | passed |
-| GNU 11.2.0 | 0.34 | 682.15817 | passed |
-| Intel 2024.0 | 0.20 | 1182.5021 | failed (`MaxRelDiff = -nan`) |
+Repeat the CCE13 baseline with `-s 30`, one MPI rank, and one OpenMP thread.
+Use the same source revision, binary, modules, PBS resources, and input for
+all repetitions. Retain every attempt as a separate result row. Because
+LULESH currently reports elapsed time in whole seconds, use multiple
+repetitions to reduce timing noise and record any available higher-resolution
+timing as supplementary metadata.
 
-AOCC is the current fastest valid result, but the data is limited to one
-measurement per environment and a very small workload. The next measurements
-must establish repeatability and a more representative runtime before drawing
-optimization conclusions.
+### 2. Compare compiler optimization levels
 
-## Next Step
+Build and run three explicit CCE13 variants:
 
-Run a repeated larger-problem AOCC baseline with one MPI task and one OpenMP
-thread, then use the same AOCC build for an OpenMP thread-scaling sweep. Keep
-the existing results schema unless a future experiment requires new columns,
-units, or result semantics.
+| Variant | Required effective optimization |
+| --- | --- |
+| CCE13-O2 | `-O2 -DNDEBUG` |
+| CCE13-O3 | `-O3 -DNDEBUG` |
+| CCE13-Ofast | `-Ofast -DNDEBUG` |
+
+Run every variant with:
+
+```text
+problem size: -s 30
+MPI ranks: 1
+OpenMP threads: 1
+```
+
+The `-O3` result is the direct comparison against the existing Release
+baseline. The `-Ofast` result requires special scientific-accuracy review,
+because fast-math transformations may change floating-point behavior.
+
+For every variant, record the compiler command flags, runtime, FOM, iteration
+count, final energy, `MaxAbsDiff`, `TotalAbsDiff`, `MaxRelDiff`, and all
+correctness/convergence markers. A variant is performance-valid only when its
+correctness fields are finite and pass the applicable acceptance checks.
+
+Select the fastest valid optimization level after repeated measurements. If
+`-Ofast` changes results beyond the accepted tolerance or produces a failed or
+non-finite correctness marker, preserve the result but exclude it from the
+valid winner selection.
+
+### 3. Scale MPI ranks
+
+Using the selected optimization build from step 2, keep OpenMP threads fixed
+at one and test:
+
+| MPI ranks | OpenMP threads |
+| ---: | ---: |
+| 1 | 1 |
+| 8 | 1 |
+| 27 | 1 |
+
+Keep `-s 30`, compiler environment, binary, and correctness criteria fixed.
+Request and record resources appropriate to the total MPI ranks, and record
+rank placement, allocated node(s), and binding information. The 27-rank case
+is compatible with a three-dimensional decomposition of a size-30 problem.
+
+Select the fastest valid MPI-rank configuration using repeated measurements.
+
+### 4. Scale OpenMP threads
+
+Using the selected optimization build and MPI-rank configuration from step 3,
+test:
+
+| MPI ranks | OpenMP threads |
+| ---: | ---: |
+| selected | 1 |
+| selected | 8 |
+| selected | 16 |
+| selected | 32 |
+
+Set and record `OMP_NUM_THREADS` explicitly. Ensure PBS CPU requests and
+process/thread binding match the requested configuration. Record total
+logical execution resources as:
+
+```text
+MPI ranks x OpenMP threads
+```
+
+Select the fastest valid hybrid configuration after repeated measurements.
+
+### 5. Confirm the final selection
+
+Repeat the selected final configuration under the same resource and
+environment conditions. Confirm that the speedup is reproducible and that the
+correctness fields remain acceptable. Do not replace the baseline record;
+retain the baseline and every intermediate attempt for comparison.
+
+## Selection criteria
+
+Configurations are ranked in this order:
+
+1. correctness and convergence must pass;
+2. all required numerical fields must be finite;
+3. numerical results must remain within the accepted tolerance relative to the
+   CCE13 baseline/reference;
+4. among valid configurations, select the lowest stable LULESH elapsed time;
+5. use FOM as a supporting performance metric, not as a substitute for
+   correctness.
+
+Every build and run must preserve the experiment ID, attempt label, PBS job
+ID, timestamps, allocated host, compiler and MPI versions, loaded modules,
+effective build flags, input, requested resources, runtime, correctness
+fields, stdout/stderr paths, exit status, and binary path.
+
+## Results handling
+
+Use the existing `results/metrics.csv` schema. Append each repeated
+measurement as a separate row and regenerate `results/RESULTS.md` from the
+CSV. Preserve failed or scientifically invalid attempts with their actual
+status; do not silently discard them. Optimization conclusions belong in
+this planning document only after the corresponding validated results have
+been recorded.
+
+## Current next step
+
+Prepare the separate CCE13 `-O2`, `-O3`, and `-Ofast` build/run cases after
+recording the repeated CCE13 Release baseline timing.
