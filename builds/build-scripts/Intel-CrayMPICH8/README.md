@@ -21,5 +21,19 @@ MPICH, MPI, and OpenMP enabled, and SILO disabled.
 
 ## Build attempts
 
-PBS `.o` and `.e` files in `outputs/` are the authoritative raw build records.
+### Intel-CrayMPICH8_v1
 
+- Status: success
+- PBS job ID: `15090185.pbs101`
+- PBS state: `F`
+- PBS exit status: `0`
+- Timestamp: `2026-08-05T00:54:01Z`
+- Hostname/node: `x1003c7s6b1n0`
+- PBS walltime: `00:00:16`
+- stdout: `outputs/Intel-CrayMPICH8_v1.o`
+- stderr: `outputs/Intel-CrayMPICH8_v1.e`
+- binary: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-Intel-CrayMPICH8-Release/lulesh2.0`
+- compiler: Intel oneAPI DPC++/C++ Compiler 2024.0.2
+- Result: executable produced successfully.
+
+PBS `.o` and `.e` files in `outputs/` are the authoritative raw build records.

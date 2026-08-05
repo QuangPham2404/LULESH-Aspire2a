@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 import re
 from pathlib import Path
 
@@ -40,12 +41,25 @@ def relative(path: Path) -> str:
     return str(path.resolve().relative_to(ROOT))
 
 
+def correctness_status(fields: dict[str, str]) -> str:
+    """Treat non-finite correctness values such as NaN as a failed check."""
+    try:
+        finite = all(math.isfinite(float(item)) for item in fields.values())
+    except ValueError:
+        finite = False
+    return "passed" if finite else "failed"
+
+
 def compiler_metadata(build_text: str, loaded_modules: str) -> tuple[str, str]:
     """Identify the compiler family and version from recorded job metadata."""
     if "aocc/" in loaded_modules:
         return "AOCC CC", value(r"aocc/([^;]+)", loaded_modules, "AOCC version")
     if "cce/" in loaded_modules:
         return "Cray CC", value(r"cce/([^;]+)", loaded_modules, "CCE version")
+    if "intel/" in loaded_modules:
+        return "Intel CC", value(r"intel/([^;]+)", loaded_modules, "Intel version")
+    if "gcc/" in loaded_modules:
+        return "GNU CC", value(r"gcc/([^;]+)", loaded_modules, "GNU version")
     return "C++ compiler", optional(r"(?:clang|gcc)[^\n]*version\s+([^\s]+)", build_text)
 
 
@@ -99,7 +113,7 @@ def extract_row(args: argparse.Namespace) -> dict[str, str]:
         **correctness_fields,
         "elapsed_seconds": value(r"Elapsed time\s*=\s*([^\s]+)", run_stdout, "elapsed time"),
         "fom_z_s": value(r"FOM\s*=\s*([^\s]+)", run_stdout, "FOM"),
-        "correctness_status": "passed",
+        "correctness_status": correctness_status(correctness_fields),
         "run_status": "success" if "Run completed:" in run_stdout else "failed",
         "binary_path": value(r"^binary:\s*(.+)$", run_stdout, "binary path"),
         "stdout_path": relative(run_stdout_path),

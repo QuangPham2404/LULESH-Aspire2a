@@ -18,5 +18,27 @@ the default GNU programming environment.
 
 ## Run attempts
 
-PBS `.o` and `.e` files in `outputs/` are the authoritative raw run records.
+### GNU-CrayMPICH8-smoke-s10_v1
 
+- Status: success
+- PBS job ID: `15090190.pbs101`
+- PBS state: `F`
+- PBS exit status: `0`
+- Timestamp: `2026-08-05T00:54:34Z`
+- Hostname/node: `x1001c6s0b0n1`
+- PBS walltime: `00:00:03`
+- stdout: `outputs/GNU-CrayMPICH8-smoke-s10_v1.o`
+- stderr: `outputs/GNU-CrayMPICH8-smoke-s10_v1.e`
+- input parameters: `-s 10`
+- MPI tasks: `1`
+- OpenMP threads: `1`
+- iterations: `231`
+- final origin energy: `2.720531e+04`
+- MaxAbsDiff: `3.637979e-12`
+- TotalAbsDiff: `1.809061e-11`
+- MaxRelDiff: `3.938811e-14`
+- LULESH elapsed time: `0.34 s`
+- FOM: `682.15817 z/s`
+- Correctness: passed.
+
+PBS `.o` and `.e` files in `outputs/` are the authoritative raw run records.

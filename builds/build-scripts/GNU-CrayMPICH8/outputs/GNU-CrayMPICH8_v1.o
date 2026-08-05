@@ -1,0 +1,67 @@
+build_id: build-GNU-CrayMPICH8
+timestamp_utc: 2026-08-05T00:54:04Z
+hostname: x1003c3s2b0n0
+repo_root: /scratch/users/ntu/pham0094/LULESH-Aspire2a
+source_dir: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF
+build_dir: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF/build-GNU-CrayMPICH8-Release
+install_prefix: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF/install-GNU-CrayMPICH8-Release
+source_commit: 3e01c40b3281aadb7f996525cdd4a3354f6d3801
+build_type: Release
+with_mpi: On
+with_openmp: On
+with_silo: Off
+requested_build_jobs: 8
+
+== loaded modules ==
+Currently Loaded Modulefiles:
+  1) craype-x86-rome          6) craype/2.7.15
+  2) libfabric/1.11.0.4.125   7) cray-dsmml/0.2.2
+  3) craype-network-ofi       8) cray-mpich/8.1.15
+  4) perftools-base/22.04.0   9) cray-pals/1.1.6
+  5) gcc/11.2.0              10) PrgEnv-gnu/8.3.3
+
+== toolchain ==
+CC: /opt/cray/pe/craype/2.7.15/bin/CC
+cmake: /bin/cmake
+mpirun: /opt/cray/pe/pals/1.1.6/bin/mpirun
+mpiexec: /opt/cray/pe/pals/1.1.6/bin/mpiexec
+$ CC --version
+g++ (GCC) 11.2.0 20210728 (Cray Inc.)
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+$ cmake --version
+cmake version 3.26.5
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+$ mpirun --version
+mpiexec version 1.1.6
+
+== cmake configure ==
+$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/opt/cray/pe/craype/2.7.15/bin/CC -DMPI_CXX_COMPILER=/opt/cray/pe/craype/2.7.15/bin/CC -DWITH_MPI=On -DWITH_OPENMP=On -DWITH_SILO=Off -DCMAKE_INSTALL_PREFIX=/scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF/install-GNU-CrayMPICH8-Release /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF
+-- The CXX compiler identification is GNU 11.2.0
+-- Cray Programming Environment 2.7.15 CXX
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/cray/pe/craype/2.7.15/bin/CC - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found MPI_CXX: /opt/cray/pe/craype/2.7.15/bin/CC (found version "3.1") 
+-- Found MPI: TRUE (found version "3.1")  
+-- Found OpenMP_CXX: -fopenmp (found version "4.5") 
+-- Found OpenMP: TRUE (found version "4.5")  
+-- Configuring done (2.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF/build-GNU-CrayMPICH8-Release
+== cmake build ==
+$ cmake --build . --parallel 8
+[ 83%] Building CXX object CMakeFiles/lulesh2.0.dir/lulesh-comm.cc.o
+[ 83%] Building CXX object CMakeFiles/lulesh2.0.dir/lulesh-init.cc.o
+[ 83%] Building CXX object CMakeFiles/lulesh2.0.dir/lulesh-util.cc.o
+[ 83%] Building CXX object CMakeFiles/lulesh2.0.dir/lulesh.cc.o
+[ 83%] Building CXX object CMakeFiles/lulesh2.0.dir/lulesh-viz.cc.o
+[100%] Linking CXX executable lulesh2.0
+[100%] Built target lulesh2.0
+build_result: success
+binary: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF/build-GNU-CrayMPICH8-Release/lulesh2.0

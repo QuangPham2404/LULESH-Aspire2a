@@ -21,5 +21,19 @@ MPICH, MPI, and OpenMP enabled, and SILO disabled.
 
 ## Build attempts
 
-PBS `.o` and `.e` files in `outputs/` are the authoritative raw build records.
+### GNU-CrayMPICH8_v1
 
+- Status: success
+- PBS job ID: `15090186.pbs101`
+- PBS state: `F`
+- PBS exit status: `0`
+- Timestamp: `2026-08-05T00:54:02Z`
+- Hostname/node: `x1003c7s2b0n0`
+- PBS walltime: `00:00:06`
+- stdout: `outputs/GNU-CrayMPICH8_v1.o`
+- stderr: `outputs/GNU-CrayMPICH8_v1.e`
+- binary: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-GNU-CrayMPICH8-Release/lulesh2.0`
+- compiler: GNU through Cray `CC`
+- Result: executable produced successfully.
+
+PBS `.o` and `.e` files in `outputs/` are the authoritative raw build records.

@@ -1,0 +1,58 @@
+experiment_id: GNU-CrayMPICH8-smoke-s10
+attempt: GNU-CrayMPICH8-smoke-s10_v1
+pbs_job_id: 15090190.pbs101
+timestamp_utc: 2026-08-05T00:54:34Z
+hostname: x1001c6s0b0n1
+binary: /home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-GNU-CrayMPICH8-Release/lulesh2.0
+source_commit: 3e01c40b3281aadb7f996525cdd4a3354f6d3801
+input_parameters: -s 10
+mpi_tasks: 1
+openmp_threads: 1
+requested_resources: select=1:ncpus=1:mpiprocs=1:mem=1gb, walltime=00:10:00
+
+== loaded modules ==
+Currently Loaded Modulefiles:
+  1) craype-x86-rome          6) craype/2.7.15
+  2) libfabric/1.11.0.4.125   7) cray-dsmml/0.2.2
+  3) craype-network-ofi       8) cray-mpich/8.1.15
+  4) perftools-base/22.04.0   9) cray-pals/1.1.6
+  5) gcc/11.2.0              10) PrgEnv-gnu/8.3.3
+
+== toolchain ==
+CC: /opt/cray/pe/craype/2.7.15/bin/CC
+mpirun: /opt/cray/pe/pals/1.1.6/bin/mpirun
+g++ (GCC) 11.2.0 20210728 (Cray Inc.)
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+mpiexec version 1.1.6
+
+== run ==
+Running problem size 10^3 per domain until completion
+Num processors: 1
+Num threads: 1
+Total number of elements: 1000 
+
+To run other sizes, use -s <integer>.
+To run a fixed number of iterations, use -i <integer>.
+To run a more or less balanced region set, use -b <integer>.
+To change the relative costs of regions, use -c <integer>.
+To print out progress, use -p
+To write an output file for VisIt, use -v
+See help (-h) for more options
+
+Run completed:
+   Problem size        =  10
+   MPI tasks           =  1
+   Iteration count     =  231
+   Final Origin Energy =  2.720531e+04
+   Testing Plane 0 of Energy Array on rank 0:
+        MaxAbsDiff   = 3.637979e-12
+        TotalAbsDiff = 1.809061e-11
+        MaxRelDiff   = 3.938811e-14
+
+Elapsed time         =       0.34 (s)
+Grind time (us/z/c)  =  1.4659357 (per dom)  (0.33863114 overall)
+FOM                  =  682.15817 (z/s)
+
