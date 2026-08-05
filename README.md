@@ -1,5 +1,7 @@
 # LULESH Aspire2A Optimization Workspace
 
+Application GitHub link: https://github.com/LLNL/LULESH
+
 This repository is a flexible blueprint for Codex-assisted HPC optimization
 work. The exact files can change by application, but the workflow should stay
 consistent:

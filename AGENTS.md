@@ -155,8 +155,61 @@ At the start of every session, read the latest progress report in ```/progress``
 - Keep build and run scripts consistent in shell options, comment style,
   metadata keys, variable naming, and attempt/output naming.
 
+- Before configuring or running, scripts must fail clearly if required source
+  paths, output directories, tools, launchers, or expected binaries are
+  missing. A tool check must be fatal when that tool is required by the next
+  command; reporting it as missing and continuing is not sufficient.
+- A preflight requirement is mandatory only when the subsequent build, run, or validation command directly depends on that tool or its output. Tools used 
+  only for optional diagnostics or provenance must not block execution. If such a tool is unavailable, record unknown or emit a warning and continue when
+  the primary workflow remains valid.
+- Do not introduce new fatal preflight requirements by inference. When a check is not clearly required by the build/run command, treat it as optional or ask
+  the user before making it mandatory.
+
+## Rule for probing scripts
+
+- A probing script is limited to observing hardware, software, modules,
+  scheduler allocations, filesystem state, or other settings relevant to
+  optimization strategy. It is unrelated to build, run, or results handling.
+- Store probing scripts in `scripts/` with a clear lower-snake-case name and
+  the same documentation, shell-safety, and PBS conventions as other scripts.
+- Probing scripts may write raw output only to the relevant `outputs/`
+  directory, normally `scripts/outputs/`. They must not edit source code,
+  build, experiment, or results files; change shared settings; install
+  software; or delete files.
+- Probing scripts must not expose passwords, tokens, or sensitive environment
+  variables. They must use bounded PBS resources and must not perform
+  computational workloads on login nodes.
+- Raw probe `.o` and `.e` files are required evidence. Keep them beside the
+  relevant script, use a new attempt-specific name for every rerun, and commit
+  and push them to GitHub like build and run output.
+- Probe-only scripts may be committed, pushed, and submitted without separate
+  permission when they satisfy the read-only scope above and pass syntax and
+  output-path checks. They must still follow the normal synchronize, pull,
+  submit, validate, and output-retrieval workflow.
+- A probe may report facts relevant to optimization, but must not contain
+  optimization recommendations or edit files based on them. Any script that
+  suggests or applies an optimization, or otherwise writes outside its output
+  directory, requires user permission before use.
+
 ## Step 1: Planning
-- We skip this step for now, the planning will be instructed by user right in the session
+- At the start of work on a new application, create the root project
+  `APPLICATION.md`. If it already exists, review and update it; do not recreate or
+  overwrite it.
+- The root `APPLICATION.md` is strictly an application overview, not an
+  optimization plan. Optimization decisions, experiment priorities, and
+  conclusions belong in `planning/`.
+- The overview should contain:
+  - the application GitHub link and the exact source revision or tag used;
+  - a summary of what the application does and the scientific or functional
+    correctness metrics it reports;
+  - build dependencies and a concise guide to the key manual build commands;
+  - key run commands, important input flags, and expected output markers;
+  - the baseline command and expected correctness/output markers to establish
+    before optimization runs begin.
+- Step 1 documentation must be prepared in the local repository first, then
+  committed and synchronized before remote build or run execution.
+- The aim is to establish an overview understanding of the project before
+  execution. Further planning is user-directed and belongs in `planning/`.
 
 ## Step 2: Preparing the build/run directories
 
@@ -209,6 +262,12 @@ builds/
     - Keep all PBS `.o` and `.e` files for build jobs.
     - Direct build-job stdout/stderr into the `outputs/` directory inside the relevant build-script directory. No need to manually extract anything at this step
     - Use user-friendly output names such as `<build_name>_v1.o`, `<build_name>_v1.e`, `<build_name>_1.1.o`, `<build_name>_v1.1.e`, `<build_name>_v1-final.o`, and `<build_name>_v1-final.e` instead of opaque code-like names when practical.
+    - Do not create a separate `records/` directory for new builds. PBS
+      stdout and stderr are the authoritative raw build records and must
+      contain the build metadata, environment, commands, and errors needed for
+      later validation.
+    - Use a new attempt-specific output name for every rerun; do not overwrite
+      an earlier `.o` or `.e` file.
 
   - Build README error-handling policy:
     - Use the build-script directory `README.md` to record build metadata, experiment intent, errors, and solutions. Record BUILD failures and patch attempts on an attempt-by-attempt basis.
@@ -266,9 +325,21 @@ experiments/<run_name>/
   
   - Raw PBS output files stay in the `outputs/` directory. Extracted result files belong in `results/` (what to extract will be instructed later)
 
+  - Existing historical `records/` directories may be retained, but new
+    workflow runs must not depend on or create them.
+
 ## Step 3: Sync the 2 repos in the local PC and on Aspire2A
 
-- Sync the 2 repos, resolve any git-related issues in this step. Continue only with a clean tree.
+- Before execution, check the status of both clones and synchronize the
+  Aspire2A clone with `git pull --ff-only` after local script changes have
+  been pushed.
+- Continue only when synchronization succeeds, the intended commit is present
+  in both clones, and neither tree has unexpected changes. Output files and
+  other explicitly documented runtime artifacts are exempt from the clean-tree
+  check.
+- Verify that the submitted scripts and source revision are the versions
+  reviewed for the current build/run attempt. If fast-forward synchronization
+  fails or the clones diverge, stop and inspect the difference before running.
 
 ## Step 4: Execute the build/run on Aspire2A
 
@@ -282,7 +353,14 @@ experiments/<run_name>/
   - the PBS job finishes successfully;
   - the expected output files are present in the designated `outputs/` directory; and
   - normal application output is present.
-- Correctness validation is required before accepting benchmark results and will be handled in a later workflow stage.
+- Record the returned PBS job ID, submission and completion timestamps, final
+  PBS state, PBS exit status, allocated hostname/node, and stdout/stderr paths.
+- Validate application-specific success using expected output markers and
+  correctness or convergence fields, including defined acceptance criteria
+  where applicable. Do not classify a run as successful from PBS exit status or
+  output-file presence alone.
+- Use a new attempt label and output filename for every retry. Record failed
+  attempts before applying a patch or submitting the next attempt.
 
 ## Step 5: Log results
 
@@ -308,15 +386,27 @@ results/
   - how run status, failures, and repeated measurements are represented; and
   - which raw `.o` and `.e` files provide the source for each row.
 
-- The CSV structure is application- and experiment-specific. Before each new
+- The CSV structure is application- and experiment-specific. Before a new
   optimization sweep, decide the required columns with the user and document
-  the decision in `results/README.md`. New completed runs normally add rows.
-  Add or change columns only after discussing and recording the schema change
-  with the user.
+  the decision in `results/README.md`. Once a schema has been decided, runs
+  that fit the existing schema may proceed automatically and normally add
+  rows. Pause for user input only when new columns, units, or result semantics
+  are needed. Add or change columns only after discussing and recording the
+  schema change with the user.
 
 - `metrics.csv` is the structured source of truth for extracted numeric and
   run metadata. Keep repeated runs as separate rows unless a different rule
   has been agreed and documented.
+- Required workflow probe and PBS `.o`/`.e` logs are tracked and pushed as
+  evidence. Only temporary or explicitly irrelevant raw artifacts should be
+  excluded.
+- Before extraction, confirm that the expected experiment output and required
+  result fields are present in the designated output files. Step 5 does not
+  need to recheck PBS job state or exit status.
+- Result extraction must preserve existing rows, append new attempts, and
+  reject or safely ignore duplicate `(experiment_id, attempt)` records. It
+  must support recording failed or incomplete attempts when the available
+  metadata permits, rather than assuming every extracted run succeeded.
 
 - `results/scripts/` contains scripts used to extract and transform values
   from raw experiment output. These scripts must follow the general script
