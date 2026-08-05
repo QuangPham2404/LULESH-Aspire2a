@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# PBS LULESH Intel baseline run; expected working directory is this experiment
+# directory; inputs are the existing Intel Release binary and -s 30; output is
+# the PBS stdout/stderr pair containing run metadata and application results.
+#PBS -N lulesh_intel_baseline_s30
+#PBS -j n
+#PBS -o outputs/Intel-CrayMPICH8-baseline-s30_v1.o
+#PBS -e outputs/Intel-CrayMPICH8-baseline-s30_v1.e
+#PBS -l select=1:ncpus=1:mpiprocs=1:mem=16gb
+#PBS -l walltime=00:10:00
+
+set -euo pipefail
+
+cd "${PBS_O_WORKDIR}"
+module swap PrgEnv-cray PrgEnv-intel/8.3.3
+
+REPO_ROOT="/home/users/ntu/pham0094/scratch/LULESH-Aspire2a"
+BINARY="${REPO_ROOT}/builds/source/LULESH-newWF/build-Intel-CrayMPICH8-Release/lulesh2.0"
+SOURCE_COMMIT="3e01c40b3281aadb7f996525cdd4a3354f6d3801"
+EXPERIMENT_ID="Intel-CrayMPICH8-baseline-s30"
+ATTEMPT="${EXPERIMENT_ID}_v1"
+INPUT_PARAMETERS="-s 30"
+REQUESTED_RESOURCES="select=1:ncpus=1:mpiprocs=1:mem=16gb, walltime=00:10:00"
+export OMP_NUM_THREADS=1
+
+echo "experiment_id: ${EXPERIMENT_ID}"
+echo "attempt: ${ATTEMPT}"
+echo "pbs_job_id: ${PBS_JOBID:-unknown}"
+echo "timestamp_utc: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+echo "hostname: $(hostname)"
+echo "binary: ${BINARY}"
+echo "source_commit: ${SOURCE_COMMIT}"
+echo "input_parameters: ${INPUT_PARAMETERS}"
+echo "mpi_tasks: 1"
+echo "openmp_threads: ${OMP_NUM_THREADS}"
+echo "requested_resources: ${REQUESTED_RESOURCES}"
+echo
+
+command -v mpirun >/dev/null 2>&1 || {
+  echo "ERROR: required tool not found: mpirun" >&2
+  exit 1
+}
+[[ -x "${BINARY}" ]] || {
+  echo "ERROR: expected successful-build binary is missing or not executable: ${BINARY}" >&2
+  exit 1
+}
+
+echo '== loaded modules =='
+module list 2>&1
+echo
+echo '== toolchain =='
+for tool in CC mpirun mpiexec; do
+  if command -v "${tool}" >/dev/null 2>&1; then
+    echo "${tool}: $(command -v "${tool}")"
+  else
+    echo "${tool}: unknown (optional provenance tool unavailable)"
+  fi
+done
+if command -v CC >/dev/null 2>&1; then CC --version; fi
+mpirun --version
+echo
+
+echo '== run =='
+mpirun -np 1 "${BINARY}" -s 30
