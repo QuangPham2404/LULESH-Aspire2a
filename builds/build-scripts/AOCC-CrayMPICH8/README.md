@@ -21,6 +21,22 @@ MPICH, MPI, and OpenMP enabled, and SILO disabled.
 
 ## Build attempts
 
-Results will be recorded here after submission. PBS `.o` and `.e` files in
-`outputs/` are the authoritative raw build records.
+### AOCC-CrayMPICH8_v1
 
+- Status: failed before the build script started
+- PBS job ID: `15090029.pbs101`
+- PBS state: `E`
+- PBS exit status: `127`
+- Node allocation: `x1001c7s6b1n0`
+- Requested resources: `select=1:ncpus=8:mem=4gb`, walltime `00:20:00`
+- Observed error: PBS resolved the relative output path against the repository
+  root and could not stage the requested output files because the root-level
+  `outputs/` directory did not exist. No build `.o` or `.e` file was produced.
+- Suspected cause: the job was submitted from the repository root instead of
+  the build-script directory.
+- Patch/workflow change: submit from
+  `builds/build-scripts/AOCC-CrayMPICH8/` and use new attempt-specific output
+  names.
+- Next attempt: `AOCC-CrayMPICH8_v1.1`, pending submission.
+
+PBS `.o` and `.e` files in `outputs/` are the authoritative raw build records.
