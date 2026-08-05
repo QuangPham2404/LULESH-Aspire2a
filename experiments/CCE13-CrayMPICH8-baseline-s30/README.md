@@ -27,10 +27,27 @@ CCE build; it does not rebuild the application.
 
 ### CCE13-CrayMPICH8-baseline-s30_v1
 
-- Status: pending submission
+- Status: success
+- PBS job ID: `15093829.pbs101`
+- PBS state: `F`
+- PBS exit status: `0`
+- Timestamp: `2026-08-05T10:43:19Z`
+- Hostname/node: `x1003c2s1b1n1`
+- PBS walltime: `00:00:26`
 - PBS stdout: `outputs/CCE13-CrayMPICH8-baseline-s30_v1.o`
 - PBS stderr: `outputs/CCE13-CrayMPICH8-baseline-s30_v1.e`
-- Expected correctness markers: `Run completed:`, `MaxRelDiff`, `Elapsed time`, and `FOM`
+- Problem size: `30`
+- MPI tasks: `1`
+- OpenMP threads: `1`
+- Iterations: `932`
+- Final Origin Energy: `2.025075e+05`
+- MaxAbsDiff: `7.639755e-11`
+- TotalAbsDiff: `8.590535e-10`
+- MaxRelDiff: `1.482369e-12`
+- LULESH elapsed time: `20 s`
+- FOM: `1281.9581 z/s`
+- Correctness: passed; expected output and finite correctness fields were present.
+- Observed error: none
 
 ## Runtime error-patching record
 

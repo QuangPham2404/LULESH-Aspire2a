@@ -27,10 +27,27 @@ GNU build; it does not rebuild the application.
 
 ### GNU-CrayMPICH8-baseline-s30_v1
 
-- Status: pending submission
+- Status: success
+- PBS job ID: `15093832.pbs101`
+- PBS state: `F`
+- PBS exit status: `0`
+- Timestamp: `2026-08-05T10:43:21Z`
+- Hostname/node: `x1001c2s7b1n0`
+- PBS walltime: `00:00:31`
 - PBS stdout: `outputs/GNU-CrayMPICH8-baseline-s30_v1.o`
 - PBS stderr: `outputs/GNU-CrayMPICH8-baseline-s30_v1.e`
-- Expected correctness markers: `Run completed:`, `MaxRelDiff`, `Elapsed time`, and `FOM`
+- Problem size: `30`
+- MPI tasks: `1`
+- OpenMP threads: `1`
+- Iterations: `932`
+- Final Origin Energy: `2.025075e+05`
+- MaxAbsDiff: `6.184564e-11`
+- TotalAbsDiff: `7.360500e-10`
+- MaxRelDiff: `1.369973e-12`
+- LULESH elapsed time: `27 s`
+- FOM: `941.23381 z/s`
+- Correctness: passed; expected output and finite correctness fields were present.
+- Observed error: none
 
 ## Runtime error-patching record
 

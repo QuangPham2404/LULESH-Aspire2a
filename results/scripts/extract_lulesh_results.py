@@ -173,6 +173,17 @@ def write_report() -> None:
             ):
                 handle.write(f"- `{key}`: `{row[key]}`\n")
 
+        failed_correctness = [row for row in rows if row["correctness_status"] == "failed"]
+        if failed_correctness:
+            handle.write("\n## Correctness notes\n\n")
+            for row in failed_correctness:
+                handle.write(
+                    f"- `{row['experiment_id']}` / `{row['attempt']}` completed with "
+                    f"`correctness_status=failed` because the recorded correctness "
+                    f"fields were not all finite (MaxRelDiff: `{row['max_rel_diff']}`). "
+                    "No patch was attempted; further investigation is required.\n"
+                )
+
         handle.write("\nNo optimization analysis is included. Analysis belongs in a later planning session.\n")
 
 

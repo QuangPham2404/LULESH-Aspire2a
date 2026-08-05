@@ -29,11 +29,27 @@ validation independently of runtime completion.
 
 ### Intel-CrayMPICH8-baseline-s30_v1
 
-- Status: pending submission
+- Status: success; correctness failed
+- PBS job ID: `15093831.pbs101`
+- PBS state: `F`
+- PBS exit status: `0`
+- Timestamp: `2026-08-05T10:43:21Z`
+- Hostname/node: `x1001c2s7b1n0`
+- PBS walltime: `00:00:35`
 - PBS stdout: `outputs/Intel-CrayMPICH8-baseline-s30_v1.o`
 - PBS stderr: `outputs/Intel-CrayMPICH8-baseline-s30_v1.e`
-- Expected correctness markers: `Run completed:`, `MaxRelDiff`, `Elapsed time`, and `FOM`
-- Correctness handling: record non-finite or failed correctness as failed; do not self-patch.
+- Problem size: `30`
+- MPI tasks: `1`
+- OpenMP threads: `1`
+- Iterations: `932`
+- Final Origin Energy: `2.025075e+05`
+- MaxAbsDiff: `4.365575e-11`
+- TotalAbsDiff: `7.966711e-10`
+- MaxRelDiff: `-nan`
+- LULESH elapsed time: `25 s`
+- FOM: `1019.1226 z/s`
+- Correctness: failed because `MaxRelDiff` was non-finite; no patch was attempted.
+- Observed error: repeated Intel correctness failure from the prior `-s 10` run.
 
 ## Runtime error-patching record
 
