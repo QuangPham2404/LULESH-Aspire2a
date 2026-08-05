@@ -333,6 +333,56 @@ Validate expected output and correctness criteria.
   result in the applicable README and, for a Track 2 case, in
   `MANUAL_INSPECTION_ERROR.md`.
 
+## Standing automation authorization
+
+The user authorizes routine commands required by the explicitly requested
+LULESH workflow without asking for separate confirmation for each command.
+This authorization applies only within the local repository and the approved
+Aspire2A project root.
+
+### Authorized routine local commands
+
+- `git status`, `git diff`, and relevant read-only Git inspection;
+- `git add` for reviewed files belonging to the current workflow;
+- `git commit` for reviewed scripts, plans, progress notes, metadata, logs,
+  and extracted results;
+- `git pull --ff-only` to synchronize the Aspire2A clone;
+- `git push origin <current-branch>` for commits produced by the current
+  explicitly requested workflow;
+- `bash -n <project-script>` and other non-mutating syntax checks;
+- `chmod +x <project-script>` when required to execute a reviewed script;
+- `mkdir -p` for designated build, experiment, and output directories;
+- removal of generated temporary cache files such as
+  `results/scripts/__pycache__/`.
+
+### Authorized routine remote commands
+
+- `ssh -O check aspire2a` before remote work;
+- `ssh -o BatchMode=yes aspire2a '<command>'` for inspection, Git
+  synchronization, PBS submission, bounded PBS monitoring, and project-root
+  workflow operations;
+- `scp -o BatchMode=yes ...` for retrieving generated build/run outputs into
+  the matching local project directories;
+- `qsub` for reviewed PBS build, run, and read-only probe scripts;
+- bounded `qstat` inspection for submitted jobs and their recorded evidence.
+
+### Authorization limits
+
+- All SSH commands must remain non-interactive and use the persistent
+  connection. Never request, read, store, transmit, or echo passwords or
+  other authentication secrets.
+- Remote commands must remain within
+  `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a` unless the user gives
+  explicit approval for a different path.
+- This authorization does not cover destructive commands, `qdel`, shared
+  software changes, package installation, authentication changes, source-code
+  changes, optimization decisions, resource-policy changes, new external
+  coordination, or unrelated files.
+- Before committing, inspect the relevant diff and run appropriate validation.
+  Do not push unrelated or unreviewed changes.
+- If a command requires new authority, accesses a path outside the approved
+  roots, or falls outside the current requested workflow, stop and ask the
+  user.
 
 ## Step 1: Planning
 - At the start of work on a new application, create the root project
