@@ -102,7 +102,8 @@ Validate expected output and correctness criteria.
 
 # Section start-up action
 
-At the start of every session, read the latest progress report in ```/progress``` to get the context on what is completed and what we are doing next.
+- After reading `AGENTS.md` at the start of each session, inform the user as confirmation.
+- At the start of every session, read the latest progress report in ```/progress``` to get the context on what is completed and what we are doing next.
 
 # Technical notes for workflow
 
@@ -191,6 +192,148 @@ At the start of every session, read the latest progress report in ```/progress``
   suggests or applies an optimization, or otherwise writes outside its output
   directory, requires user permission before use.
 
+## Error-patching procedures
+
+- Classify build and run errors after inspecting the available evidence, not from
+  the process exit status alone. Review the PBS state and exit status, stdout,
+  stderr, expected output files, normal application output, and correctness or
+  convergence markers before selecting an error-handling track.
+
+### Track 1: automatic workflow patching
+
+- Use Track 1 only for deterministic, low-risk defects in the workflow
+  machinery. The cause must be sufficiently clear and the expected behavior
+  after the correction must be unambiguous.
+- Typical Track 1 errors include:
+  - an incorrect working directory or relative path;
+  - missing preparation of a designated output directory;
+  - incorrect PBS output names or paths;
+  - a stale or incorrect expected-binary path;
+  - shell quoting or control-flow errors;
+  - an unnecessarily strict preflight check;
+  - inconsistent workflow metadata; and
+  - an extraction-script parsing or duplicate-handling defect.
+- Track 1 is limited to reversible changes to workflow scripts,
+  documentation, metadata, and output handling. It must not be used when the
+  correction requires source-code changes, optimization decisions, new
+  compiler or MPI strategies, changed resource policies, shared-software
+  changes, or an uncertain interpretation of application behavior.
+- The build-specific and run-specific error-handling instructions later in
+  this workflow remain authoritative for their respective operations. The
+  agent must follow those sections for the additional build/run details,
+  including the appropriate README, output directory, attempt naming,
+  synchronization, validation, and success criteria.
+- For a Track 1 failure, follow this procedure:
+  1. Identify the error and confirm that it is a deterministic workflow defect.
+  2. Preserve the failed attempt's evidence.
+  3. Before applying a patch, immediately record the failed attempt in the
+     corresponding build or experiment README. Include the attempt label, PBS
+     job ID, stdout path, stderr path, observed error, suspected cause, and
+     planned patch.
+  4. Apply the patch in the local repository and perform appropriate checks,
+     such as shell syntax, path, or configuration validation.
+  5. Use a new attempt label and new PBS `.o` and `.e` filenames. Never
+     overwrite the earlier attempt's evidence.
+  6. Follow the Git and synchronization procedure before using changed
+     scripts on Aspire2A: review the local changes, commit and push when
+     required, then pull the reviewed changes remotely with
+     `git pull --ff-only`.
+  7. Submit the retry through PBS and update the corresponding README with
+     the result of the retry.
+  8. Continue the normal build/run validation workflow. A retry is successful
+     only when the applicable PBS, output-presence, application-output, and
+     correctness criteria are satisfied.
+- Build failures and their Track 1 patches belong in
+  `builds/build-scripts/<build_name>/README.md`. Run failures and their Track 1
+  patches belong in `experiments/<run_name>/README.md`.
+
+### Track 2: manual inspection
+
+- Use Track 2 when the error requires interpretation, user judgment, external
+  authorization, or a change beyond routine workflow repair.
+- Typical Track 2 errors include:
+  - compiler errors involving source compatibility or language behavior;
+  - unavailable dependencies, packages, or modules;
+  - MPI initialization failures, hangs, or abnormal termination;
+  - scheduler, resource, hardware, or filesystem problems;
+  - possible compiler or MPI correctness issues;
+  - required changes to source code, inputs, compiler flags, resources, or
+    launch strategy;
+  - uncertain causes with multiple plausible explanations; and
+  - repeated failure after a reasonable Track 1 patch.
+- For a Track 2 failure, follow this procedure:
+  1. Identify and classify the error.
+  2. Preserve the evidence, including the experiment or build ID, attempt
+     label, PBS job ID, timestamp, PBS state and exit status, allocated
+     hostname or node, stdout and stderr paths, compiler and MPI metadata,
+     loaded modules, flags, inputs, requested resources, and relevant
+     application output.
+  3. Stop the affected workflow. Do not patch, retry, change configuration,
+     or submit another job automatically.
+  4. Inspect the evidence without modifying the affected workflow.
+  5. Record the observed error, suspected causes, confirmed facts,
+     unresolved questions, affected build or run, and relevant evidence.
+  6. Suggest one or more possible fixes for the user's manual review. A
+     suggested fix is not authorization to apply it.
+  7. Record the case in the root `MANUAL_INSPECTION_ERROR.md`.
+  8. Wait for the user's decision or an explicitly scoped
+     `OVERRID_AUTO_PATCH` authorization.
+  9. After the issue is resolved or an authorized action is taken, update the
+     same case with the selected fix, authorization or user decision, action
+     taken, resulting attempt, outcome, remaining concerns, and final status.
+- Maintain `MANUAL_INSPECTION_ERROR.md` as an append-only case log. Give each
+  case a unique case ID and a status such as `OPEN`,
+  `USER_ACTION_REQUIRED`, `AUTHORIZED_FOR_PATCH`, `RESOLVED`, or `CLOSED`.
+- Recording a proposed fix in `MANUAL_INSPECTION_ERROR.md` never authorizes
+  the agent to apply it.
+
+### Scientific-correctness exception
+
+- A build or run that completes but reports failed, non-finite, or otherwise
+  invalid scientific correctness is handled as a special non-blocking case by
+  default. Examples include `MaxRelDiff = -nan`, failed convergence, failed
+  verification markers, or unexpected numerical output despite a successful
+  process exit.
+- Do not self-patch a scientific-correctness error by default. Continue the
+  normal results workflow, preserve the attempt, and record its correctness
+  status accurately.
+- Add a clear note to `results/RESULTS.md` describing the affected run or
+  attempt, the observed correctness failure, the relevant output marker, that
+  no patch was attempted, and that further investigation is required.
+- If the user later requests investigation or authorizes a patch, create or
+  link a manual-inspection case as appropriate and follow the user's explicit
+  scope.
+
+### `OVERRID_AUTO_PATCH` authorization
+
+- `OVERRID_AUTO_PATCH` is a user-supplied, command-like authorization that
+  permits the agent to handle a named Track 2 error automatically.
+- Use the following structured format:
+
+  ```text
+  OVERRID_AUTO_PATCH
+  error_class: <specific error class>
+  allowed_action: <specific permitted action>
+  scope: <current attempt | current build | current experiment | current session>
+  restrictions: <limitations>
+  ```
+
+- The override must explicitly name the error class, permitted action, scope,
+  and applicable restrictions. An ambiguous override does not activate
+  automatic patching.
+- The override expires at the end of its stated scope. It authorizes only the
+  named class of fix and does not authorize unrelated source changes,
+  optimization decisions, resource changes, authentication changes, or
+  destructive actions.
+- Package or module actions must preserve compiler, MPI, module, package, and
+  version provenance. Do not modify shared software unless that specific
+  action is explicitly authorized and permitted by the operating rules.
+- Record the override text or its essential authorization details, the matched
+  error, action taken, environment or package changes, retry attempt, and
+  result in the applicable README and, for a Track 2 case, in
+  `MANUAL_INSPECTION_ERROR.md`.
+
+
 ## Step 1: Planning
 - At the start of work on a new application, create the root project
   `APPLICATION.md`. If it already exists, review and update it; do not recreate or
@@ -210,8 +353,7 @@ At the start of every session, read the latest progress report in ```/progress``
   committed and synchronized before remote build or run execution.
 - The aim is to establish an overview understanding of the project before
   execution. Further planning is user-directed and belongs in `planning/`.
-
-## Step 2: Preparing the build/run directories
+: Preparing the build/run directories
 
 - Prepare everything in the local repo in this PC first. The agent is allowed to ssh to Aspire2A to get information to prepare the scripts/debug, but refrain from editing the repo on Aspire2A.
 
