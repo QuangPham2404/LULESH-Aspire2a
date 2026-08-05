@@ -1,0 +1,14 @@
+build_id: build-AOCC-CrayMPICH8
+timestamp_utc: 2026-08-05T00:03:30Z
+hostname: x1001c7s6b1n0
+repo_root: /scratch/users/ntu/pham0094/LULESH-Aspire2a
+source_dir: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF
+build_dir: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF/build-AOCC-CrayMPICH8-Release
+install_prefix: /scratch/users/ntu/pham0094/LULESH-Aspire2a/builds/source/LULESH-newWF/install-AOCC-CrayMPICH8-Release
+source_commit: unknown
+build_type: Release
+with_mpi: On
+with_openmp: On
+with_silo: Off
+requested_build_jobs: 8
+

@@ -55,6 +55,24 @@ MPICH, MPI, and OpenMP enabled, and SILO disabled.
   needed by the compiler or build commands.
 - Patch/workflow change: remove Git from the compute-node tool requirement and
   pass the verified source commit as explicit PBS metadata.
-- Next attempt: `AOCC-CrayMPICH8_v1.2`, pending submission.
+- Next attempt: `AOCC-CrayMPICH8_v1.2`.
+
+### AOCC-CrayMPICH8_v1.2
+
+- Status: success
+- PBS job ID: `15090035.pbs101`
+- PBS state: `E`
+- PBS exit status: `0`
+- Timestamp: `2026-08-05T00:05:07Z`
+- Hostname/node: `x1001c7s6b1n0`
+- PBS walltime: `00:00:21`
+- stdout: `outputs/AOCC-CrayMPICH8_v1.2.o`
+- stderr: `outputs/AOCC-CrayMPICH8_v1.2.e`
+- binary: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-AOCC-CrayMPICH8-Release/lulesh2.0`
+- source commit: `3e01c40b3281aadb7f996525cdd4a3354f6d3801`
+- compiler environment: `PrgEnv-aocc/8.3.3`, AOCC 3.2.0, Cray MPICH 8.1.15
+- build flags: `Release; WITH_MPI=On; WITH_OPENMP=On; WITH_SILO=Off`
+- Observed error: none
+- Result: executable produced and build output completed successfully.
 
 PBS `.o` and `.e` files in `outputs/` are the authoritative raw build records.
