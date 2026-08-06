@@ -12,7 +12,9 @@ Use this directory for:
 - interpretation of wins, regressions, failures, and noise
 - decisions about next experiments
 
-`PLANS.md` is the concise master tracker. Detailed analyses are stored in
+`PLANS.md` is the concise master tracker with three sections: the current
+baseline, an optimization-direction table that also serves as analysis
+history, and the agreed next direction. Detailed analyses are stored in
 `planning/analysis/`, one stable `<analysis-id>.md` file per optimization
 direction or independently grouped question. Each analysis presents selected
 data from `results/metrics.csv`, interprets the results, records limitations,

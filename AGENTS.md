@@ -664,10 +664,42 @@ planning/
     └── ...
 ```
 
-`planning/PLANS.md` is the concise master tracker. It should list each
-optimization direction, link to its detailed analysis file, record its status,
-summarize the main finding, and identify the suggested follow-up. It must not
-become a duplicate of the complete result data or detailed analysis.
+`planning/PLANS.md` is the master tracker for the optimization workflow. It
+must remain concise and must not become a duplicate of the complete result
+data or detailed analysis. Its structure is fixed and consists of exactly
+these three main sections:
+
+1. `## Current baseline`: record the currently accepted reference
+   environment, source revision, build and effective flags, workload, resource
+   configuration, runtime/FOM, and correctness result. Update this section
+   only when the project explicitly establishes a new baseline; do not replace
+   the historical result rows in `results/metrics.csv`.
+2. `## Optimization directions`: maintain one tracking-table row for each
+   optimization direction. The table must include the direction, analysis ID
+   and link, analysis date, analysis scope, status, main finding, and suggested
+   follow-up. This table is also the analysis history, so do not maintain a
+   separate `Analysis history` section in `PLANS.md`. When an analysis file is
+   created or updated, add or update its row rather than copying the detailed
+   analysis into the tracker. Preserve links to older analysis files when a
+   direction is split into multiple related analyses.
+3. `## Next direction`: record the single next optimization direction agreed
+   from the `## 5. Suggested next section` of the latest relevant analysis
+   file. Include the analysis-file link, hypothesis or purpose, required
+   controls/repetitions, and success criteria when they are stated. This
+   section is a planning record, not authorization to submit jobs or modify
+   workflow files.
+
+The required tracker table should have this shape:
+
+```markdown
+| Direction | Analysis ID / file | Analysis date | Scope | Status | Main finding | Suggested follow-up |
+| --- | --- | --- | --- | --- | --- | --- |
+```
+
+Every authorized `ANALYSE_RESULTS` request must update the applicable row and
+the `Next direction` section after the detailed analysis is written. The
+tracker must distinguish provisional, scope-limited, invalid, completed, and
+user-approved directions where applicable.
 
 Each optimization direction has its own file under `planning/analysis/`.
 Separate related tests into clearly labeled subsections within that file. If
