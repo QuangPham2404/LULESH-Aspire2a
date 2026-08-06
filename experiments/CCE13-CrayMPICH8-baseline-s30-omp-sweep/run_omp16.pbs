@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Submit the CCE13 -s30 OpenMP-thread-16 scaling case from this directory.
+#PBS -N lulesh_cce13_omp16_s30
+#PBS -j n
+#PBS -o outputs/CCE13-CrayMPICH8-baseline-s30-omp16_v1.o
+#PBS -e outputs/CCE13-CrayMPICH8-baseline-s30-omp16_v1.e
+#PBS -l select=1:ncpus=16:mpiprocs=1:mem=16gb
+#PBS -l walltime=00:10:00
+set -euo pipefail
+export OMP_THREADS=16
+export EXPERIMENT_ID=CCE13-CrayMPICH8-baseline-s30-omp16
+export REQUESTED_RESOURCES='select=1:ncpus=16:mpiprocs=1:mem=16gb,walltime=00:10:00'
+bash /home/users/ntu/pham0094/scratch/LULESH-Aspire2a/experiments/CCE13-CrayMPICH8-baseline-s30-omp-sweep/run_lulesh_cce13_omp.pbs
