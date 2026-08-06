@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Run the existing CCE13 Release LULESH binary for one MPI-scaling case;
+# expected working directory is this experiment directory; MPI_RANKS,
+# EXPERIMENT_ID, and REQUESTED_RESOURCES are supplied by the case PBS wrapper.
+
+set -euo pipefail
+cd "${PBS_O_WORKDIR}"
+REPO_ROOT="/home/users/ntu/pham0094/scratch/LULESH-Aspire2a"
+BINARY="${REPO_ROOT}/builds/source/LULESH-newWF/build-CCE13-CrayMPICH8-newWF-Release/lulesh2.0"
+MPI_RANKS="${MPI_RANKS:?MPI_RANKS is required}"
+EXPERIMENT_ID="${EXPERIMENT_ID:?EXPERIMENT_ID is required}"
+ATTEMPT="${EXPERIMENT_ID}_v1"
+REQUESTED_RESOURCES="${REQUESTED_RESOURCES:?REQUESTED_RESOURCES is required}"
+SOURCE_COMMIT="3e01c40b3281aadb7f996525cdd4a3354f6d3801"
+export OMP_NUM_THREADS=1
+
+echo "experiment_id: ${EXPERIMENT_ID}"
+echo "attempt: ${ATTEMPT}"
+echo "pbs_job_id: ${PBS_JOBID:-unknown}"
+echo "timestamp_utc: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+echo "hostname: $(hostname)"
+echo "binary: ${BINARY}"
+echo "source_commit: ${SOURCE_COMMIT}"
+echo "input_parameters: -s 30"
+echo "mpi_tasks: ${MPI_RANKS}"
+echo "openmp_threads: ${OMP_NUM_THREADS}"
+echo "requested_resources: ${REQUESTED_RESOURCES}"
+echo
+command -v mpirun >/dev/null 2>&1 || { echo "ERROR: mpirun missing" >&2; exit 1; }
+[[ -x "${BINARY}" ]] || { echo "ERROR: binary missing: ${BINARY}" >&2; exit 1; }
+echo '== loaded modules =='
+module list 2>&1
+echo '== toolchain =='
+CC --version 2>/dev/null || true
+mpirun --version
+echo "omp_num_threads: ${OMP_NUM_THREADS}"
+echo '== run =='
+mpirun -np "${MPI_RANKS}" "${BINARY}" -s 30
