@@ -1,161 +1,36 @@
-# LULESH Optimization Plan
+# LULESH Optimization Plan — Master Tracker
 
-## Scope and baseline
+This file is the concise tracker for optimization directions. Detailed data,
+interpretation, limitations, and proposed follow-ups are stored in the linked
+files under [`planning/analysis/`](analysis/).
 
-This plan optimizes the CCE13 configuration using the larger `-s 30`
-workload. The selected baseline is:
+## Current baseline
 
-- compiler: Cray CCE 13.0.2;
-- MPI: Cray MPICH 8.1.15;
-- source revision: `3e01c40b3281aadb7f996525cdd4a3354f6d3801`;
-- build: `Release`, with MPI and OpenMP enabled and SILO disabled;
-- input: `-s 30`;
-- MPI ranks: `1`;
-- OpenMP threads: `1`;
-- recorded elapsed time: `20 s`;
-- recorded FOM: `1281.9581 z/s`;
-- correctness: passed, with `MaxRelDiff = 1.482369e-12`.
+- Environment: Cray CCE 13.0.2 / Cray MPICH 8.1.15
+- Source revision: `3e01c40b3281aadb7f996525cdd4a3354f6d3801`
+- Build: Release, MPI/OpenMP enabled, SILO disabled; effective `-O3 -DNDEBUG`
+- Workload: `-s 30`
+- Baseline configuration: 1 MPI rank x 1 OpenMP thread
+- Baseline measurement: 20 s, FOM 1281.9581, correctness passed
 
-The previous `-s 30` environment comparison identified CCE13 as the fastest
-valid result. The Intel result is excluded from optimization comparisons
-because it reported `MaxRelDiff = -nan`.
+## Optimization directions
 
-## Important Release-build finding
+| Direction | Analysis | Status | Main finding | Suggested follow-up |
+| --- | --- | --- | --- | --- |
+| Compiler/PrgEnv comparison | [`initial_sweep.md`](analysis/initial_sweep.md#31-compilerprgenv-sweep) | analyzed, provisional | CCE13 is the fastest valid environment; Intel is scientifically invalid due to `MaxRelDiff=-nan` | Repeat under controlled timing before final ranking |
+| CCE13 optimization flags | [`initial_sweep.md`](analysis/initial_sweep.md#32-cce13-optimization-flag-sweep) | analyzed, provisional | `-O3` is the fastest valid tested flag; `-Ofast` is faster but invalid | Preserve `-O3`; investigate `-Ofast` only with explicit correctness authorization |
+| CCE13 MPI scaling | [`initial_sweep.md`](analysis/initial_sweep.md#33-mpi-rank-scaling-for-the-previous-valid-configuration) | analyzed, scope-limited | Higher ranks increase FOM and elapsed time for per-domain `-s 30`; this is weak-scaling-style data | Use fixed global size for a separate strong-scaling study if required |
+| CCE13 OpenMP scaling | [`initial_sweep.md`](analysis/initial_sweep.md#34-openmp-thread-scaling-for-the-previous-valid-configuration) | analyzed, provisional | 8 threads is the fastest measured valid configuration, but affinity warnings remain | Control affinity and repeat 1-thread and 8-thread cases |
 
-The current CCE13 CMake `Release` configuration already injects:
+## Immediate next direction
 
-```text
--O3 -DNDEBUG
-```
+Validate timing stability and CPU/thread affinity for the CCE13 Release/O3
+baseline and the 1 MPI rank x 8 OpenMP thread candidate. Do not treat the
+current single measurements as a final reproducible optimum until the warning
+and repeatability questions are addressed.
 
-With OpenMP enabled, the generated compile flags are:
+## Analysis history
 
-```text
--fopenmp -O3 -DNDEBUG
-```
-
-Consequently, the existing CCE13 Release binary is the `-O3` case. Any new
-optimization build must use a separate build directory and must record the
-actual generated flags, so that results are not confused with the existing
-baseline.
-
-## Experimental procedure
-
-### 1. Establish timing stability
-
-Repeat the CCE13 baseline with `-s 30`, one MPI rank, and one OpenMP thread.
-Use the same source revision, binary, modules, PBS resources, and input for
-all repetitions. Retain every attempt as a separate result row. Because
-LULESH currently reports elapsed time in whole seconds, use multiple
-repetitions to reduce timing noise and record any available higher-resolution
-timing as supplementary metadata.
-
-### 2. Compare compiler optimization levels
-
-Build and run three explicit CCE13 variants:
-
-| Variant | Required effective optimization |
-| --- | --- |
-| CCE13-O2 | `-O2 -DNDEBUG` |
-| CCE13-O3 | `-O3 -DNDEBUG` |
-| CCE13-Ofast | `-Ofast -DNDEBUG` |
-
-Run every variant with:
-
-```text
-problem size: -s 30
-MPI ranks: 1
-OpenMP threads: 1
-```
-
-The `-O3` result is the direct comparison against the existing Release
-baseline. The `-Ofast` result requires special scientific-accuracy review,
-because fast-math transformations may change floating-point behavior.
-
-For every variant, record the compiler command flags, runtime, FOM, iteration
-count, final energy, `MaxAbsDiff`, `TotalAbsDiff`, `MaxRelDiff`, and all
-correctness/convergence markers. A variant is performance-valid only when its
-correctness fields are finite and pass the applicable acceptance checks.
-
-Select the fastest valid optimization level after repeated measurements. If
-`-Ofast` changes results beyond the accepted tolerance or produces a failed or
-non-finite correctness marker, preserve the result but exclude it from the
-valid winner selection.
-
-### 3. Scale MPI ranks
-
-Using the selected optimization build from step 2, keep OpenMP threads fixed
-at one and test:
-
-| MPI ranks | OpenMP threads |
-| ---: | ---: |
-| 1 | 1 |
-| 8 | 1 |
-| 27 | 1 |
-
-Keep `-s 30`, compiler environment, binary, and correctness criteria fixed.
-Request and record resources appropriate to the total MPI ranks, and record
-rank placement, allocated node(s), and binding information. The 27-rank case
-is compatible with a three-dimensional decomposition of a size-30 problem.
-
-Select the fastest valid MPI-rank configuration using repeated measurements.
-
-### 4. Scale OpenMP threads
-
-Using the selected optimization build and MPI-rank configuration from step 3,
-test:
-
-| MPI ranks | OpenMP threads |
-| ---: | ---: |
-| selected | 1 |
-| selected | 8 |
-| selected | 16 |
-| selected | 32 |
-
-Set and record `OMP_NUM_THREADS` explicitly. Ensure PBS CPU requests and
-process/thread binding match the requested configuration. Record total
-logical execution resources as:
-
-```text
-MPI ranks x OpenMP threads
-```
-
-Select the fastest valid hybrid configuration after repeated measurements.
-
-### 5. Confirm the final selection
-
-Repeat the selected final configuration under the same resource and
-environment conditions. Confirm that the speedup is reproducible and that the
-correctness fields remain acceptable. Do not replace the baseline record;
-retain the baseline and every intermediate attempt for comparison.
-
-## Selection criteria
-
-Configurations are ranked in this order:
-
-1. correctness and convergence must pass;
-2. all required numerical fields must be finite;
-3. numerical results must remain within the accepted tolerance relative to the
-   CCE13 baseline/reference;
-4. among valid configurations, select the lowest stable LULESH elapsed time;
-5. use FOM as a supporting performance metric, not as a substitute for
-   correctness.
-
-Every build and run must preserve the experiment ID, attempt label, PBS job
-ID, timestamps, allocated host, compiler and MPI versions, loaded modules,
-effective build flags, input, requested resources, runtime, correctness
-fields, stdout/stderr paths, exit status, and binary path.
-
-## Results handling
-
-Use the existing `results/metrics.csv` schema. Append each repeated
-measurement as a separate row and regenerate `results/RESULTS.md` from the
-CSV. Preserve failed or scientifically invalid attempts with their actual
-status; do not silently discard them. Optimization conclusions belong in
-this planning document only after the corresponding validated results have
-been recorded.
-
-## Current next step
-
-Prepare the separate CCE13 `-O2`, `-O3`, and `-Ofast` build/run cases after
-recording the repeated CCE13 Release baseline timing.
+| Analysis ID | Date | Scope | Source |
+| --- | --- | --- | --- |
+| `initial_sweep` | 2026-08-06 | All recorded `-s 30` runtime rows grouped into four directions | [`results/metrics.csv`](../results/metrics.csv) |

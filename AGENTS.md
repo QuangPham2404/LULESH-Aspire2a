@@ -17,7 +17,7 @@
 
 - If the connection is unavailable, stop and ask the user to run:
 
-  `aspire-connect`
+  `aspire2a-connect`
 
 - Do not initiate a normal interactive SSH login.
 
@@ -384,7 +384,7 @@ Aspire2A project root.
   roots, or falls outside the current requested workflow, stop and ask the
   user.
 
-## Step 1: Planning
+## Step 1: Initial Planning
 - At the start of work on a new application, create the root project
   `APPLICATION.md`. If it already exists, review and update it; do not recreate or
   overwrite it.
@@ -614,3 +614,169 @@ results/
   when to copy or summarize results from `results/` into `planning/`. The
   results-logging session must not add interpretation, optimization decisions,
   or next-experiment conclusions to `planning/`.
+
+## Step 6: Update results with analysis to planning/ and conduct analysis
+
+Step 6 is a user-triggered analysis workflow. It begins only when the user
+provides the command-like authorization `ANALYSE_RESULTS`. This authorization
+permits the agent to read the recorded results, create or update analysis
+documents under `planning/analysis/`, update the planning master tracker, and
+present the selected data and analysis to the user. It does not authorize
+submitting jobs, changing source code, changing build or run configuration,
+applying optimization decisions, or starting the next experiment.
+
+### `ANALYSE_RESULTS` authorization
+
+The preferred form is:
+
+```text
+ANALYSE_RESULTS
+analysis_id: <stable analysis name>
+source: results/metrics.csv
+include: <experiments, variants, or attempts to include>
+grouping: <optimization direction or grouped tests>
+scope: <current analysis | current session>
+restrictions: <additional limits>
+```
+
+The `analysis_id` should be stable and use lowercase kebab-case, for example
+`cce13-openmp-scaling`. `source` defaults to `results/metrics.csv`. The
+`include` and `grouping` fields identify which CSV rows belong in the analysis
+and how they should be compared. If the user supplies only
+`ANALYSE_RESULTS`, the agent must inspect the available results and ask the
+user which optimization direction or result group to analyze before writing a
+new analysis document.
+
+The command is scoped to the current user-requested analysis. It does not
+authorize unrelated analysis files or automatic traversal of every result
+unless the user explicitly requests that scope.
+
+### Analysis directory and master tracker
+
+Use this structure:
+
+```text
+planning/
+├── README.md
+├── PLANS.md
+└── analysis/
+    ├── <analysis-id>.md
+    └── ...
+```
+
+`planning/PLANS.md` is the concise master tracker. It should list each
+optimization direction, link to its detailed analysis file, record its status,
+summarize the main finding, and identify the suggested follow-up. It must not
+become a duplicate of the complete result data or detailed analysis.
+
+Each optimization direction has its own file under `planning/analysis/`.
+Separate related tests into clearly labeled subsections within that file. If
+one direction becomes too large or contains genuinely independent questions,
+create additional analysis files with distinct stable IDs and link them from
+the master tracker.
+
+### Analysis source, data handling, and provenance
+
+`results/metrics.csv` remains the structured source of truth. `RESULTS.md`
+remains the generated human-readable results report. An analysis document may
+copy the selected rows or a relevant table of fields from `metrics.csv` so
+that the comparison is readable, but it must not silently alter, replace, or
+become an independent source of numeric truth.
+
+For every included result, preserve enough provenance to locate the source
+row and raw evidence. At minimum, record the `experiment_id` and `attempt`;
+when relevant, also include the PBS job ID, source commit, build flags, input,
+MPI/task/thread configuration, runtime, FOM, correctness status, and links to
+the run and build stdout/stderr files. Do not omit failed or scientifically
+invalid results when they are relevant to the analysis. Explain why they are
+excluded from valid-winner selection.
+
+Before analyzing, confirm that the requested rows exist, the CSV schema is
+unchanged or compatible, and the selected rows have the expected result
+fields. Do not invent missing measurements. Mark unavailable values and
+uncertain conclusions explicitly.
+
+### Required analysis-file format
+
+Every new or substantially updated analysis file must use the following
+sections:
+
+```markdown
+# Analysis: <optimization direction>
+
+## 1. Concise summary
+
+What was tried, why it was tried, and the scope of this analysis.
+
+## 2. Scope and evaluation criteria
+
+Record the source revision, compiler/MPI environment, workload, baseline,
+correctness requirements, performance metrics, included experiments, and
+exclusions.
+
+## 3. Data and analysis
+
+Use clearly labeled subsections for each grouped test. Present the selected
+data in tables or concise excerpts, followed by an interpretation of that
+group. Values must agree with `results/metrics.csv`.
+
+## 4. Insights gained
+
+Record confirmed wins, regressions, invalid or inconclusive results, noise,
+reproducibility limits, and other constraints.
+
+## 5. Suggested next section
+
+State the proposed next optimization direction, hypothesis, configurations,
+required controls or repetitions, success criteria, and unresolved questions.
+
+## 6. Provenance
+
+Link to the source CSV, experiment IDs and attempts, raw output files, and
+record the analysis date.
+```
+
+The exact headings may include descriptive text, but the six required content
+areas must remain identifiable: concise summary; scope and evaluation criteria;
+data and analysis; insights; suggested next section; and provenance. The
+suggested next section is a recommendation for user review, not permission to
+execute it.
+
+### Analysis procedure
+
+For an authorized `ANALYSE_RESULTS` request:
+
+1. Read the current `results/README.md`, `results/metrics.csv`, and
+   `results/RESULTS.md`, then identify the requested rows and their raw
+   evidence.
+2. Check correctness and validity before ranking performance. Correctness,
+   finite numerical fields, and the documented acceptance criteria take
+   precedence over runtime and FOM.
+3. Copy the selected data needed for the comparison into the relevant
+   `planning/analysis/<analysis-id>.md` file, retaining row identity and
+   provenance links.
+4. Analyze wins, regressions, failures, weak or strong scaling implications,
+   timing noise, resource effects, and unresolved limitations as applicable.
+5. Record a cautious, evidence-based suggested next section. Do not turn a
+   single noisy or warning-affected measurement into a definitive conclusion.
+6. Create or update the corresponding entry and link in `planning/PLANS.md`.
+7. Present the selected data, analysis, limitations, and suggested next
+   section to the user. The final response must be understandable without
+   opening the analysis file.
+
+The analysis workflow should preserve existing analysis history. When new
+measurements are added later, update the affected analysis file with a new
+analysis date and explain what changed; do not overwrite prior evidence or
+silently rewrite an earlier conclusion.
+
+## Step 7: Repeat the loop
+
+There are 2 cases in which the workflow ends at the end of a session:
+
+- (1) The the workflow stops before step 5, meaning errors/issues (eg. build/run errors, sudden ssh problems, etc) are preventing the runs to obtain acceptable results. In this case, the user will:
+  1. Instruct the agent to end the session by writing the .md progress logging file into `progress` for that section.
+  2. To continue for the next session, the user will instruct the agent to read the progress logs to continue debugging the issues. The workflow picks up on whatever step it was in the previous session.
+- (2) The workflow completes until step 6, meaning results are logged and analysis are done. In this case the user will:
+  1. Instruct the agent to end the session by writing the .md progress logging file into `progress` for that section.
+  2. To continue for the next session, the user will work with the agent to investigate the analysis/insights for the previous session already available in the analysis file in `planning/analysis`. After deciding on the next optimization, the user will manually instruct the agent to update the same file in the `5. Suggested next section` with details for the next session and use that to plan the execution.
+  3. From there, the workflow re-start from step 2.

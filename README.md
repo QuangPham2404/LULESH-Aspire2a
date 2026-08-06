@@ -12,7 +12,9 @@ consistent:
 4. Submit compute work through PBS on Aspire2A.
 5. Record errors, metadata, raw output, and validation details.
 6. Extract result files from raw experiment output.
-7. Write planning and analysis together, then choose the next experiment.
+7. When authorized with `ANALYSE_RESULTS`, copy selected result data into a
+   direction-specific analysis file, analyze it, update the planning tracker,
+   and choose the next experiment.
 
 The local PC and Aspire2A should both use real Git clones of this repository.
 The Aspire2A clone is the working copy for remote builds and batch execution,
@@ -63,9 +65,11 @@ with metadata and purpose, and raw PBS output files such as `.o` and `.e`.
 
 Planning and result analysis.
 
-Keep experiment plans and analysis together here to avoid splitting the story
-across multiple directories. A `PLANS.md` file can describe the hypothesis,
-execution plan, completed results, interpretation, and next steps.
+`PLANS.md` is the concise master tracker for optimization directions, statuses,
+findings, and follow-ups. Detailed, user-triggered result analyses belong in
+`planning/analysis/<analysis-id>.md`, with one file per optimization direction
+or independently grouped question. `results/metrics.csv` remains the numeric
+source of truth.
 
 ### `results/`
 
