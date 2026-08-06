@@ -1,0 +1,10 @@
+* text=auto
+
+# Keep source, documentation, and workflow files consistent.
+*.md text eol=lf
+*.sh text eol=lf
+*.pbs text eol=lf
+*.csv text eol=lf
+
+# Preserve raw PBS/application evidence exactly as produced.
+**/outputs/** -text

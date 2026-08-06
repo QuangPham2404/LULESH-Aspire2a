@@ -160,7 +160,7 @@ Validate expected output and correctness criteria.
   paths, output directories, tools, launchers, or expected binaries are
   missing. A tool check must be fatal when that tool is required by the next
   command; reporting it as missing and continuing is not sufficient.
-- A preflight requirement is mandatory only when the subsequent build, run, or validation command directly depends on that tool or its output. Tools used 
+- A preflight requirement is mandatory only when the subsequent build, run, or validation command directly depends on that tool or its output. Tools used
   only for optional diagnostics or provenance must not block execution. If such a tool is unavailable, record unknown or emit a warning and continue when
   the primary workflow remains valid.
 - Do not introduce new fatal preflight requirements by inference. When a check is not clearly required by the build/run command, treat it as optional or ask
@@ -514,7 +514,7 @@ experiments/<run_name>/
       - patch or workflow change applied;
       - result of the next attempt, once known.
     - Do not wait until the end of a long debugging sequence to summarize errors. Record each attempt while the context is fresh.
-  
+
   - Raw PBS output files stay in the `outputs/` directory. Extracted result files belong in `results/` (what to extract will be instructed later)
 
   - Existing historical `records/` directories may be retained, but new
