@@ -801,14 +801,78 @@ measurements are added later, update the affected analysis file with a new
 analysis date and explain what changed; do not overwrite prior evidence or
 silently rewrite an earlier conclusion.
 
-## Step 7: Repeat the loop
+## Step 7: End the session and resume the workflow
 
-There are 2 cases in which the workflow ends at the end of a session:
+A session may end in one of two states. The agent must record the applicable
+state in a dated progress file under `progress/` before ending the session.
 
-- (1) The the workflow stops before step 5, meaning errors/issues (eg. build/run errors, sudden ssh problems, etc) are preventing the runs to obtain acceptable results. In this case, the user will:
-  1. Instruct the agent to end the session by writing the .md progress logging file into `progress` for that section.
-  2. To continue for the next session, the user will instruct the agent to read the progress logs to continue debugging the issues. The workflow picks up on whatever step it was in the previous session.
-- (2) The workflow completes until step 6, meaning results are logged and analysis are done. In this case the user will:
-  1. Instruct the agent to end the session by writing the .md progress logging file into `progress` for that section.
-  2. To continue for the next session, the user will work with the agent to investigate the analysis/insights for the previous session already available in the analysis file in `planning/analysis`. After deciding on the next optimization, the user will manually instruct the agent to update the same file in the `5. Suggested next section` with details for the next session and use that to plan the execution.
-  3. From there, the workflow re-start from step 2.
+Progress files should use:
+
+```text
+progress/YYYY-MM-DD-progress[_sN].md
+```
+
+The progress file must summarize the current workflow step, completed work,
+decisions, relevant experiment/build/attempt IDs, PBS job IDs when available,
+evidence paths, blockers, and the exact next action.
+
+### Case 1: The workflow stops before Step 5 is complete
+
+This case applies when execution cannot proceed to valid result logging.
+Examples include build or run failures, Track 2 manual-inspection cases,
+scheduler or filesystem problems, SSH interruption, missing authorization, or
+a user-requested pause before results are complete.
+
+Before ending the session, the agent must:
+
+1. Preserve all available evidence and do not overwrite failed attempts.
+2. Record the current step, experiment/build name, attempt label, PBS job ID,
+   stdout/stderr paths, observed error or blocker, and relevant manual-
+   inspection case in the progress file.
+3. State whether the workflow is waiting for user action, external-state
+   change, authorization, or a technical fix.
+4. Record the exact step and action from which the next session should resume.
+5. Do not retry, patch, submit another job, or change the optimization
+   direction unless the applicable workflow rules or the user explicitly
+   authorize that action.
+6. Validate, commit, and push the progress record when the normal Git workflow
+   applies. Synchronize Aspire2A with `git pull --ff-only` before further
+   remote work resumes.
+7. Preserve and report pre-existing untracked artifacts. Do not delete them
+   merely to make the repository appear clean.
+
+The next session resumes at the recorded incomplete step after the blocker has
+been resolved and any required user decision or authorization has been
+provided. Step 1 is not repeated unless the work has changed to a genuinely
+new application.
+
+### Case 2: Step 6 is complete
+
+This case applies when the requested build/run work has been recorded in
+`results/`, the requested analysis has been completed, and the relevant
+analysis file and `planning/PLANS.md` have been updated.
+
+Before ending the session, the agent must:
+
+1. Write a progress file recording the completed experiments, analysis IDs,
+   main findings, limitations, current baseline, and the next direction.
+2. Ensure the detailed analysis remains under
+   `planning/analysis/<analysis-id>.md`.
+3. Ensure `planning/PLANS.md` contains:
+   - the current baseline;
+   - the optimization-direction tracking table, including analysis history;
+   - the single next direction agreed from the latest relevant analysis.
+4. Preserve the completed analysis as historical evidence. Do not silently
+   replace prior measurements or conclusions.
+5. Treat the `Suggested next section` in an analysis file as a recommendation,
+   not as authorization to execute the next experiment.
+6. Wait for the user to confirm or modify the proposed next optimization
+   direction before preparing the next build or run workflow.
+7. Validate, commit, and push the progress and planning records when the
+   normal Git workflow applies. Synchronize Aspire2A with `git pull --ff-only`
+   before the next remote execution session.
+
+After the user confirms the next optimization direction, the workflow resumes
+at Step 2 to prepare the required build, run, and result-handling materials.
+Step 1 is not repeated unless the project has changed to a genuinely new
+application.
