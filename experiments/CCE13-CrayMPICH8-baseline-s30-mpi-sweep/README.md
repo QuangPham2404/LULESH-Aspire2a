@@ -32,7 +32,21 @@ PBS exit status `127`. Suspected cause: compute-node working-directory
 resolution differed from the qsub submission path. Patch: invoke the shared
 runner through its absolute project-root path and use new `v1.1` output names.
 
-Retry attempts are pending.
+### Corrected retry attempts
+
+- `CCE13-CrayMPICH8-baseline-s30-mpi1_v1`, PBS job `15097040.pbs101`, node
+  `x1001c6s0b1n1`, completed `F / 0`; elapsed `20 s`, FOM `1258.0879`,
+  correctness passed.
+- `CCE13-CrayMPICH8-baseline-s30-mpi8_v1`, PBS job `15097041.pbs101`, node
+  `x1002c5s2b0n0`, completed `F / 0`; elapsed `70 s`, FOM `6230.7687`,
+  correctness passed.
+- `CCE13-CrayMPICH8-baseline-s30-mpi27_v1`, PBS job `15097042.pbs101`, node
+  `x1001c0s0b0n0`, completed `F / 0`; elapsed `170 s`, FOM `13372.882`,
+  correctness passed.
+
+All corrected retries reported finite correctness fields. With `-s 30` per
+MPI domain, total work increases with MPI rank count; these measurements are
+weak-scaling-style results rather than fixed-global-size strong scaling.
 
 ## RUNTIME error-patching record
 
