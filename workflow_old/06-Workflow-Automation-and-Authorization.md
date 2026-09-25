@@ -6,7 +6,30 @@ any specially authorized commands, prefixes, paths, and restrictions.
 
 An approved `tasks/TASK-XXX.md` defines the maximum execution scope for Codex
 for that task. The Strategic Analyst proposes the task, the Human Leader
-approves it, and Codex executes only the approved scope.
+explicitly approves it, and the Strategic Analyst may materialize the approved
+content directly in GitHub when authorized. Otherwise the Human Leader or a
+mechanical repository agent writes the exact approved content. Codex executes
+only the synchronized repository state and scope; it must not reconstruct or
+guess a Strategic Specification from conversation history. Direct write access
+never grants the Strategic Analyst authority to approve its own proposal.
+
+Before execution, verify task front matter has `status: APPROVED` and
+`current_owner: codex`, and `### 1.11 Authorization` records
+`status: APPROVED`, `approved_by: user`, and the exact `approved_scope`.
+Git writes remain subject to project policy and explicit human authorization.
+
+## `SETUP` authority
+
+`SETUP` authorizes repository and Git inspection and a setup proposal only.
+It does not authorize creating, editing, moving, renaming, or deleting files.
+After the user agrees with the proposal, Codex presents the exact final change
+set, states important areas that will remain untouched, and asks for final
+confirmation. Only clear final confirmation authorizes those local setup
+changes; revisions to the plan require another review and confirmation.
+
+`SETUP` does not authorize scientific or task execution, cluster jobs,
+strategic analysis, or commit/push. Existing project Git policy still governs
+commit and push.
 
 ## Actions normally within routine workflow scope
 
@@ -78,9 +101,10 @@ normally be created.
 
 Authorization is limited to the named project, cluster scope, current task,
 and explicit files or commands. An authorization for one workflow step does
-not authorize another step. `ANALYSE_RESULTS` authorizes analysis only; it does
-not authorize jobs, source changes, build/run configuration changes, or the
-next experiment. `OVERRID_AUTO_PATCH` authorizes only its named error class,
+not authorize another step. `ANALYSE_RESULTS` authorizes analysis and its
+`EXECUTED` → `ANALYZED` task handoff only; it does not authorize jobs, source
+changes, build/run configuration changes, or the next experiment.
+`OVERRID_AUTO_PATCH` authorizes only its named error class,
 action, scope, and restrictions.
 
 Never treat a recommendation, progress note, analysis conclusion, or proposed

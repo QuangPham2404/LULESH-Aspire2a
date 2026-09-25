@@ -56,9 +56,9 @@ Replace every placeholder below. This section is the active cluster adapter.
 - Scheduler: `PBS`
 - Scheduler submission command: `qsub`
 - Scheduler monitoring command and polling limit: `qstat with bounded monitoring; do not poll excessively`
-- MPI or application launcher: `Use the launcher specified by the approved build/run scripts; do not change launcher strategy without authorization`
+- MPI or application launcher: `Use the launcher specified by the approved task and build/run scripts; do not change launcher strategy without authorization`
 - Module policy: `Use available modules; do not install packages or modify shared software without explicit user approval`
-- Login-node restrictions: `Do not perform computational workloads on login nodes; run computation through PBS batch jobs`
+- Login-node restrictions: `Do not perform computational workloads on login nodes; follow approved project rules for other login-node actions`
 - Compute-node execution restrictions: `Run computation only through PBS batch jobs`
 - Approved remote paths: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a`
 
@@ -74,4 +74,4 @@ Before the first remote action, verify that:
 6. launcher, modules, and resource syntax match the cluster;
 7. no rule asks Codex to handle or expose authentication secrets.
 
-If any required section is incomplete or any adaptation check fails, stop before remote work.
+If any check fails, stop before remote work.

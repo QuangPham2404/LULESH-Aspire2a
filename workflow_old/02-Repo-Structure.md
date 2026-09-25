@@ -1,9 +1,9 @@
 # Repository Structure and Skeleton
 
 Codex must use this document when creating, validating, or explaining the
-workflow repository skeleton. Create the directories and documentation locally
-first. Do not create a different structure merely because another layout seems
-convenient.
+workflow repository structure. The canonical skeleton is the reference for a
+fresh project. For an existing project, reuse compatible structures and make
+only the changes required for Workflow v2 to govern new work.
 
 ## Canonical skeleton
 
@@ -115,11 +115,19 @@ analysis workflow.
 
 One bounded strategic action corresponds to one task file under `tasks/`.
 The task file is the persistent handoff between the Strategic Analyst and
-Codex and contains only:
+Codex. Copy `workflow/TASK-TEMPLATE.md` for each new task; do not invent a
+shorter task format or create task files for historical work. It contains only:
 
 1. `STRATEGIC SPECIFICATION`, written by the Strategic Analyst and approved by
    the Human Leader;
-2. `CODEX EXECUTION REPORT`, appended by Codex after execution.
+2. `CODEX EXECUTION REPORT`, completed by Codex after execution.
+
+The Human Leader reviews and explicitly approves the Strategic Analyst's
+draft before materialization. With authorized direct GitHub access, the
+Strategic Analyst writes the approved task to the repository. Otherwise the
+Human Leader writes it or authorizes a repository agent to copy the exact
+approved content mechanically. Only the committed, synchronized task file is
+executable by Codex; conversation drafts are proposals.
 
 Raw benchmark, probe, profiling, PBS, and result evidence stays in its
 existing canonical location. Task files reference that evidence rather than
@@ -131,13 +139,13 @@ simplified contract:
 
 ```markdown
 ---
-task_id: ...
-title: ...
-analysis_id: ...
-status: ...
-parent_task: ...
-created: ...
-last_updated: ...
+task_id: TASK-XXX
+title: <relevant title>
+analysis_id: <stable analysis id>
+status: COMPLETE
+parent_task: <TASK-XXX | none>
+created: YYYY-MM-DD
+last_updated: YYYY-MM-DD
 ---
 
 # Analysis — <Title>
@@ -152,7 +160,8 @@ last_updated: ...
 ```
 
 The internal structure of `## 2. Analysis` is flexible and should fit the
-question and evidence.
+question and evidence. One analysis may synthesize multiple tasks when
+scientifically appropriate.
 
 ## Naming contract
 
@@ -165,8 +174,21 @@ question and evidence.
 
 ## Skeleton initialization behavior
 
-When asked to create the skeleton, Codex should create missing directories,
-README files, templates, and placeholders locally, while preserving existing
-files and user changes. It must not clone source, submit jobs, install
-packages, modify shared software, or invent application-specific correctness
-criteria without the relevant project information and authorization.
+`SETUP` follows the inspection, proposal, and confirmation procedure in
+`07-Workflow.md` before creating or changing any files.
+
+For a fresh or nearly empty project, propose only the canonical directories,
+README files, templates, and placeholders the project requires. Do not invent
+cluster facts, application correctness criteria, compiler or launcher settings,
+resource requests, or project permissions; leave unknown values explicit.
+
+For an existing project, map its directories to the roles above and reuse
+compatible `builds/`, `experiments/`, `planning/`, `results/`, `progress/`, and
+`scripts/` structures. Add only genuinely missing elements, such as `tasks/`
+when needed, and minimally adapt existing guidance. Replace a reusable
+workflow-control file only when it is an older version and replacement is the
+cleanest migration; preserve its project-specific configuration. Historical
+builds, experiments, PBS evidence, results, analyses, plans, scripts, progress
+records, names, and attempt histories remain authoritative. Do not move,
+renumber, regenerate, or convert them merely to match the skeleton; do not
+create task files for past work. Workflow v2 governs new work going forward.
