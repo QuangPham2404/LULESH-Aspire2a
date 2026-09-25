@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Submit controlled repeatability repetition 1 of the 1 MPI rank x 8 OpenMP
+# thread case for TASK-001 from this directory.
+#PBS -N lulesh_cce13_aff_omp8_v1
+#PBS -j n
+#PBS -o outputs/CCE13-CrayMPICH8-s30-affinity-omp8_v1.o
+#PBS -e outputs/CCE13-CrayMPICH8-s30-affinity-omp8_v1.e
+#PBS -l select=1:ncpus=8:mpiprocs=1:mem=16gb
+#PBS -l walltime=00:10:00
+set -euo pipefail
+export OMP_THREADS=8
+export EXPERIMENT_ID=CCE13-CrayMPICH8-s30-affinity-omp8
+export ATTEMPT_SUFFIX=v1
+export REQUESTED_RESOURCES='select=1:ncpus=8:mpiprocs=1:mem=16gb,walltime=00:10:00'
+bash /home/users/ntu/pham0094/scratch/LULESH-Aspire2a/experiments/cce13-craympich8-s30-affinity-repeatability/run_lulesh_cce13_affinity.sh

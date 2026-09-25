@@ -1,7 +1,7 @@
 ---
 task_id: TASK-001
 title: Controlled OpenMP Affinity and Repeatability Validation
-status: APPROVED
+status: EXECUTING
 current_owner: codex
 parent_task: none
 analysis_id: omp-affinity-repeatability
