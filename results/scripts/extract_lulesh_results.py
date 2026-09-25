@@ -31,6 +31,16 @@ def optional(pattern: str, text: str, default: str = "unknown") -> str:
     return match.group(1).strip() if match else default
 
 
+def thread_count(text: str) -> str:
+    """Prefer the helper's explicit openmp_threads metadata because
+    OMP_DISPLAY_AFFINITY output can interrupt the Num threads line;
+    fall back to the application marker for older runs."""
+    match = re.search(r"^openmp_threads:\s*([0-9]+)$", text, re.MULTILINE)
+    if match:
+        return match.group(1)
+    return value(r"Num threads:\s*([0-9]+)", text, "threads")
+
+
 def modules(text: str) -> str:
     """Convert module-list blocks into one compact CSV field."""
     names = re.findall(r"(?m)(?:^|\s)\d+\)\s+([^\s]+)", text)
@@ -109,7 +119,7 @@ def extract_row(args: argparse.Namespace) -> dict[str, str]:
         "requested_resources": value(r"^requested_resources:\s*(.+)$", run_stdout, "requested resources"),
         "problem_size": value(r"Problem size\s*=\s*([0-9]+)", run_stdout, "problem size"),
         "mpi_tasks": value(r"MPI tasks\s*=\s*([0-9]+)", run_stdout, "MPI tasks"),
-        "threads": value(r"Num threads:\s*([0-9]+)", run_stdout, "threads"),
+        "threads": thread_count(run_stdout),
         "iterations": value(r"Iteration count\s*=\s*([0-9]+)", run_stdout, "iterations"),
         **correctness_fields,
         "elapsed_seconds": value(r"Elapsed time\s*=\s*([^\s]+)", run_stdout, "elapsed time"),

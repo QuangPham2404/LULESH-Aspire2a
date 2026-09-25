@@ -57,10 +57,56 @@ parameters, resources, module list, and launcher version), and runs only
 
 ## Run attempts
 
-Status: prepared, not yet submitted. Update this section with PBS job IDs,
-nodes, elapsed times, FOM, correctness fields, and thread-placement evidence
-after the six jobs run.
+Status: stopped after two completed jobs when Task-001's placement stop
+condition was triggered. No further submissions, retries, or
+affinity-configuration changes were made; the
+remaining planned attempts (`..._v1.1`, `..._v1-final`) were not submitted.
+
+Completed attempts:
+
+| Attempt | PBS job | Node | Timestamp (UTC) | Threads | Elapsed (s) | FOM (z/s) | MaxRelDiff | Correctness | Run status |
+| --- | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
+| `CCE13-CrayMPICH8-s30-affinity-omp1_v1` | `25556314.pbs101` | `x1001c2s2b0n1` | `2026-09-25T22:56:19Z` | 1 | 15 | 1697.189 | `1.482369e-12` | passed (finite) | success |
+| `CCE13-CrayMPICH8-s30-affinity-omp8_v1` | `25556332.pbs101` | `x1001c2s5b1n0` | `2026-09-25T22:59:23Z` | 8 | 8.1 | 3116.4855 | `1.461140e-12` | passed (finite) | success |
+
+Both runs printed `Run completed:` with iteration count 932 and finite
+correctness fields (omp1: `MaxAbsDiff=7.639755e-11`,
+`TotalAbsDiff=8.590535e-10`; omp8: `MaxAbsDiff=6.548362e-11`,
+`TotalAbsDiff=8.615093e-10`).
+
+Thread-placement evidence from `OMP_DISPLAY_AFFINITY=TRUE` in stdout:
+
+- omp1: thread 0 reports `affinity:  0`.
+- omp8: all eight threads (0-7) report `affinity:  0`.
+
+Preserved stderr evidence:
+
+- omp1: one `[CCE OMP] affinity unbinding error: Invalid argument` message.
+- omp8: the Cray oversubscription warning and eight
+  `[CCE OMP] affinity unbinding error: Invalid argument` messages.
+
+Raw evidence: `outputs/CCE13-CrayMPICH8-s30-affinity-omp1_v1.o/.e` and
+`outputs/CCE13-CrayMPICH8-s30-affinity-omp8_v1.o/.e`.
+
+## Result extraction record
+
+The first extraction attempt with `results/scripts/extract_lulesh_results.py`
+failed on both completed `.o` files with
+`ValueError: Missing threads in extracted output`. With
+`OMP_DISPLAY_AFFINITY=TRUE`, the Cray affinity report interrupts the
+application's `Num threads:` line, so stdout contains
+`Num threads: CCE OMP: host ... affinity:  0` with the thread count on the
+next line, and the extractor's `Num threads:\s*([0-9]+)` pattern no longer
+matches. All other fields parsed normally.
+
+Track-1 repair, applied before the two rows were appended: the extractor now
+prefers the run helper's explicit `openmp_threads:` metadata line and falls
+back to the previous `Num threads:` application marker for older runs without
+helper metadata. The `results/metrics.csv` schema is unchanged.
 
 ## RUNTIME error-patching record
 
-No runtime errors recorded.
+No runtime error patching was performed. The affinity unbinding errors and
+the omp8 oversubscription warning in the preserved stderr files are recorded
+as evidence only; the controlled sequence was stopped instead of patched or
+retried.

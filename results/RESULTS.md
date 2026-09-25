@@ -20,6 +20,8 @@
 | CCE13-CrayMPICH8-baseline-s30-omp8 | CCE13-CrayMPICH8-newWF | CCE13-CrayMPICH8-baseline-s30-omp8_v1 | 15097075.pbs101 | `-s 30` | 6.6 | 3784.5446 | passed | success |
 | CCE13-CrayMPICH8-baseline-s30-omp16 | CCE13-CrayMPICH8-newWF | CCE13-CrayMPICH8-baseline-s30-omp16_v1 | 15097076.pbs101 | `-s 30` | 17 | 1470.1691 | passed | success |
 | CCE13-CrayMPICH8-baseline-s30-omp32 | CCE13-CrayMPICH8-newWF | CCE13-CrayMPICH8-baseline-s30-omp32_v1 | 15097077.pbs101 | `-s 30` | 31 | 806.53914 | passed | success |
+| CCE13-CrayMPICH8-s30-affinity-omp1 | CCE13-CrayMPICH8-newWF | CCE13-CrayMPICH8-s30-affinity-omp1_v1 | 25556314.pbs101 | `-s 30` | 15 | 1697.189 | passed | success |
+| CCE13-CrayMPICH8-s30-affinity-omp8 | CCE13-CrayMPICH8-newWF | CCE13-CrayMPICH8-s30-affinity-omp8_v1 | 25556332.pbs101 | `-s 30` | 8.1 | 3116.4855 | passed | success |
 
 ## Provenance
 
@@ -293,6 +295,40 @@
 - `binary_path`: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-CCE13-CrayMPICH8-newWF-Release/lulesh2.0`
 - `stdout_path`: `experiments/CCE13-CrayMPICH8-baseline-s30-omp-sweep/outputs/CCE13-CrayMPICH8-baseline-s30-omp32_v1.o`
 - `stderr_path`: `experiments/CCE13-CrayMPICH8-baseline-s30-omp-sweep/outputs/CCE13-CrayMPICH8-baseline-s30-omp32_v1.e`
+- `build_stdout_path`: `builds/build-scripts/CCE13-CrayMPICH8-newWF/outputs/CCE13-CrayMPICH8-newWF_v1.o`
+- `build_stderr_path`: `builds/build-scripts/CCE13-CrayMPICH8-newWF/outputs/CCE13-CrayMPICH8-newWF_v1.e`
+### CCE13-CrayMPICH8-s30-affinity-omp1 / CCE13-CrayMPICH8-s30-affinity-omp1_v1
+
+- `timestamp_utc`: `2026-09-25T22:56:19Z`
+- `hostname`: `x1001c2s2b0n1`
+- `source_commit`: `3e01c40b3281aadb7f996525cdd4a3354f6d3801`
+- `compiler`: `Cray CC`
+- `compiler_version`: `13.0.2`
+- `mpi_implementation`: `Cray MPICH`
+- `mpi_version`: `8.1.15`
+- `mpi_launcher_version`: `1.1.6`
+- `loaded_modules`: `craype-x86-rome;craype/2.7.15;libfabric/1.11.0.4.125;cray-dsmml/0.2.2;craype-network-ofi;cray-mpich/8.1.15;perftools-base/22.04.0;cray-pals/1.1.6;cce/13.0.2;PrgEnv-cray/8.3.3`
+- `build_flags`: `Release;OPTIMIZATION_FLAGS=-O3 -DNDEBUG;WITH_MPI=On;WITH_OPENMP=On;WITH_SILO=Off`
+- `binary_path`: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-CCE13-CrayMPICH8-newWF-Release/lulesh2.0`
+- `stdout_path`: `experiments/cce13-craympich8-s30-affinity-repeatability/outputs/CCE13-CrayMPICH8-s30-affinity-omp1_v1.o`
+- `stderr_path`: `experiments/cce13-craympich8-s30-affinity-repeatability/outputs/CCE13-CrayMPICH8-s30-affinity-omp1_v1.e`
+- `build_stdout_path`: `builds/build-scripts/CCE13-CrayMPICH8-newWF/outputs/CCE13-CrayMPICH8-newWF_v1.o`
+- `build_stderr_path`: `builds/build-scripts/CCE13-CrayMPICH8-newWF/outputs/CCE13-CrayMPICH8-newWF_v1.e`
+### CCE13-CrayMPICH8-s30-affinity-omp8 / CCE13-CrayMPICH8-s30-affinity-omp8_v1
+
+- `timestamp_utc`: `2026-09-25T22:59:23Z`
+- `hostname`: `x1001c2s5b1n0`
+- `source_commit`: `3e01c40b3281aadb7f996525cdd4a3354f6d3801`
+- `compiler`: `Cray CC`
+- `compiler_version`: `13.0.2`
+- `mpi_implementation`: `Cray MPICH`
+- `mpi_version`: `8.1.15`
+- `mpi_launcher_version`: `1.1.6`
+- `loaded_modules`: `craype-x86-rome;craype/2.7.15;libfabric/1.11.0.4.125;cray-dsmml/0.2.2;craype-network-ofi;cray-mpich/8.1.15;perftools-base/22.04.0;cray-pals/1.1.6;cce/13.0.2;PrgEnv-cray/8.3.3`
+- `build_flags`: `Release;OPTIMIZATION_FLAGS=-O3 -DNDEBUG;WITH_MPI=On;WITH_OPENMP=On;WITH_SILO=Off`
+- `binary_path`: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a/builds/source/LULESH-newWF/build-CCE13-CrayMPICH8-newWF-Release/lulesh2.0`
+- `stdout_path`: `experiments/cce13-craympich8-s30-affinity-repeatability/outputs/CCE13-CrayMPICH8-s30-affinity-omp8_v1.o`
+- `stderr_path`: `experiments/cce13-craympich8-s30-affinity-repeatability/outputs/CCE13-CrayMPICH8-s30-affinity-omp8_v1.e`
 - `build_stdout_path`: `builds/build-scripts/CCE13-CrayMPICH8-newWF/outputs/CCE13-CrayMPICH8-newWF_v1.o`
 - `build_stderr_path`: `builds/build-scripts/CCE13-CrayMPICH8-newWF/outputs/CCE13-CrayMPICH8-newWF_v1.e`
 

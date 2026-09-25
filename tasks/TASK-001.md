@@ -1,8 +1,8 @@
 ---
 task_id: TASK-001
 title: Controlled OpenMP Affinity and Repeatability Validation
-status: EXECUTING
-current_owner: codex
+status: BLOCKED
+current_owner: user
 parent_task: none
 analysis_id: omp-affinity-repeatability
 created: 2026-09-26
@@ -326,40 +326,100 @@ approved_by: user
 
 ### 2.1 Execution Status
 
-status: <COMPLETE | PARTIAL | BLOCKED | FAILED>
+status: BLOCKED
 
 ### 2.2 Orchestration Summary
 
-*Workers, responsibilities, dependencies, and follow-ups.*
+OpenCode delegated one read-only CCE/binary inspection, two parallel
+experiment-artifact preparation assignments, two sequential run assignments
+(one for each submitted attempt), and one results-bookkeeping assignment.
+Codex validated worker claims against raw PBS evidence and repository state.
+Attempts 3–6 were not submitted after the 8-thread placement stop condition.
 
 ### 2.3 Work Executed
 
-*Factual work performed.*
+Committed and synchronized the reviewed experiment scripts, transitioned this
+task to execution, verified the existing binary and source revision, and
+submitted only the first 1-thread and first 8-thread wrappers. Both jobs
+completed with PBS state `F`, exit status 0, `Run completed:`, 932 iterations,
+and finite correctness values. Preserved both attempts' raw `.o` and `.e`
+files locally and on Aspire2A. Added two result rows using the existing
+33-column schema. The extractor now reads `openmp_threads:` metadata when
+affinity output interrupts the application's `Num threads:` line, while
+retaining its prior fallback for older outputs. Recorded the affinity failure
+as manual-inspection case `TASK-001-OMP-AFFINITY-001`.
 
 ### 2.4 Operational Validation
 
-*Evidence, correctness, provenance, consistency, and scope checks.*
+The binary existed and was executable; its SHA-256 was
+`177e15836d5be4464d8b013741fea0a36bb689c609ddc39b13ef21b69911fb7c`. The
+source checkout matched `3e01c40b3281aadb7f996525cdd4a3354f6d3801`. The 1T job
+(`25556314.pbs101`) ran on `x1001c2s2b0n1`: elapsed 15 s, FOM 1697.189,
+`MaxRelDiff=1.482369e-12`; its diagnostic reported thread 0 affinity `0` and
+stderr contained one affinity-unbinding error. The 8T job (`25556332.pbs101`)
+ran on `x1001c2s5b1n0`: elapsed 8.1 s, FOM 3116.4855,
+`MaxRelDiff=1.461140e-12`; all eight threads reported affinity `0`, and
+stderr contained the oversubscription warning and eight affinity-unbinding
+errors. Both rows have `correctness_status=passed` and `run_status=success`;
+placement failure is documented separately without changing the results
+schema.
+
+The extractor passed dry-run checks on both new attempts and on prior output
+with and without helper metadata. All 16 prior CSV rows were preserved, the
+schema remains 33 columns, and the two new `(experiment_id, attempt)` keys are
+unique. All new PBS/helper scripts passed `bash -n`. Remote and local clones
+were synchronized at commit `70e390449ea45b23d2047b0ea1b2a725cb7eac05` before
+submission.
 
 ### 2.5 Evidence and Artifacts
 
-*Reference raw evidence paths and revisions; do not duplicate outputs.*
+Experiment artifacts:
+`experiments/cce13-craympich8-s30-affinity-repeatability/`.
+
+Raw evidence:
+`outputs/CCE13-CrayMPICH8-s30-affinity-omp1_v1.o/.e` and
+`outputs/CCE13-CrayMPICH8-s30-affinity-omp8_v1.o/.e` in that directory.
+
+Structured rows: `results/metrics.csv`; generated report:
+`results/RESULTS.md`. Manual-inspection case:
+`MANUAL_INSPECTION_ERROR.md#case-task-001-omp-affinity-001`.
 
 ### 2.6 Files Changed
 
-*List files or state None.*
+Added the new experiment README, six PBS wrappers, common run helper, and
+`outputs/.gitkeep`. Updated `results/scripts/extract_lulesh_results.py`,
+`results/metrics.csv`, and `results/RESULTS.md`. Added the manual-inspection
+case and a dated progress handoff. Updated this report and task lifecycle
+metadata. The four retrieved raw PBS files remain preserved as evidence.
 
 ### 2.7 Missing / Unavailable Evidence
 
-*List gaps or state None.*
+Four planned repetitions were not run because the 8-thread diagnostic showed
+no distinct placements and reported unbinding errors. Their absence is the
+required stop outcome pending Human Leader review; they are not treated as
+missing files for an otherwise completed experiment.
 
 ### 2.8 Execution Errors / Exceptions
 
-*List failures and exceptions or state None.*
+The affinity diagnostic reported one unbinding error for the 1T attempt and
+eight unbinding errors plus the oversubscription warning for the 8T attempt.
+No affinity, launcher, scheduler, source, compiler, or shared-system change
+was attempted. The initial result extraction failed because affinity output
+interrupted the `Num threads:` marker; the deterministic parser repair is
+documented in the experiment README and preserves the existing schema.
 
 ### 2.9 Scope Compliance
 
-*State whether work stayed within the approved scope.*
+Work stayed within the approved binary, source, workload, rank count, thread
+counts, and resource envelope. Exactly two approved attempts were submitted;
+the remaining four were stopped under §1.9. No optimization interpretation,
+baseline promotion, or next-direction recommendation was made.
 
 ### 2.10 Handoff to Strategic Analyst
 
-*Give factual reading guidance, without strategic interpretation.*
+Review `MANUAL_INSPECTION_ERROR.md#case-task-001-omp-affinity-001` and the two
+raw `.o/.e` pairs under the experiment `outputs/` directory. The 8T output
+reports affinity `0` for each thread and stderr records eight unbinding errors
+and the oversubscription warning. Attempts 3–6 remain unsubmitted. The task is
+blocked pending the Human Leader's decision on whether to authorize any
+additional diagnostic or affinity-control action.
