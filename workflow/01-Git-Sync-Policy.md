@@ -22,7 +22,8 @@ Before starting work in either environment:
 3. inspect unexpected changes;
 4. stop if fast-forward synchronization fails or the clones diverge.
 
-Before remote execution after local script changes:
+Before Codex executes an approved task or remote execution after local script
+changes:
 
 1. prepare files locally;
 2. inspect the relevant diff;
@@ -30,9 +31,16 @@ Before remote execution after local script changes:
 4. commit reviewed changes when authorized;
 5. push from the local PC when authorized;
 6. pull with `git pull --ff-only` in the cluster clone;
-7. verify the intended commit and scripts are present remotely;
-8. confirm that neither tree has unexpected changes, except documented
+7. verify the intended commit, task revision, and scripts are present
+   remotely;
+8. verify the explicitly identified task is approved and its scope matches the
+   user's instruction;
+9. confirm that neither tree has unexpected changes, except documented
    generated output or explicitly preserved runtime artifacts.
+
+Codex must not act on a stale Strategic Specification. If the intended task
+revision is absent, the task is not approved, or the local and remote clones
+disagree about the task, stop and synchronize or report the conflict.
 
 Never run stale local-only build, run, extraction, or planning scripts on the
 cluster. They must reach the cluster through the reviewed Git synchronization.
@@ -68,3 +76,10 @@ clone must then run `git pull --ff-only` before submission.
 Aspire2A-to-local result retrieval may use the project's documented output
 retrieval workflow, but retrieved files must land in the matching local
 project directories and retain their provenance.
+
+After Codex appends the Execution Report to the active task:
+
+1. validate the task file and referenced evidence;
+2. commit and push when required and authorized by normal project policy;
+3. ensure the Strategic Analyst can read the latest repository revision before
+   analysis is authorized.

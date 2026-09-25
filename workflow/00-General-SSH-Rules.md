@@ -45,22 +45,22 @@ new cluster. Preserve the universal rules when adapting this file.
 
 Replace every placeholder below. This section is the active cluster adapter.
 
-- Cluster name: `<cluster-name>`
-- SSH alias: `<ssh-alias>`
-- Persistent connection check: `<connection-check-command>`
-- If unavailable, user recovery command: `<recovery-command>`
-- Required SSH form: `<ssh-command-form>`
-- Required SCP form: `<scp-command-form>`
-- Required rsync form, if used: `<rsync-command-form>`
-- Remote project root: `<remote-project-root>`
-- Scheduler: `<PBS|Slurm|other>`
-- Scheduler submission command: `<submission-command>`
-- Scheduler monitoring command and polling limit: `<monitoring-policy>`
-- MPI or application launcher: `<launcher>`
-- Module policy: `<module-policy>`
-- Login-node restrictions: `<login-node-policy>`
-- Compute-node execution restrictions: `<compute-node-policy>`
-- Approved remote paths: `<approved-paths>`
+- Cluster name: `Aspire2A`
+- SSH alias: `aspire2a`
+- Persistent connection check: `ssh -O check aspire2a`
+- If unavailable, user recovery command: `aspire2a-connect`
+- Required SSH form: `ssh -o BatchMode=yes aspire2a '<command>'`
+- Required SCP form: `scp -o BatchMode=yes ...`
+- Required rsync form: `rsync -e 'ssh -o BatchMode=yes' ...`
+- Remote project root: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a`
+- Scheduler: `PBS`
+- Scheduler submission command: `qsub`
+- Scheduler monitoring command and polling limit: `qstat with bounded monitoring; do not poll excessively`
+- MPI or application launcher: `Use the launcher specified by the approved build/run scripts; do not change launcher strategy without authorization`
+- Module policy: `Use available modules; do not install packages or modify shared software without explicit user approval`
+- Login-node restrictions: `Do not perform computational workloads on login nodes; run computation through PBS batch jobs`
+- Compute-node execution restrictions: `Run computation only through PBS batch jobs`
+- Approved remote paths: `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a`
 
 ## Cluster adaptation checks
 
@@ -74,4 +74,4 @@ Before the first remote action, verify that:
 6. launcher, modules, and resource syntax match the cluster;
 7. no rule asks Codex to handle or expose authentication secrets.
 
-If any check fails, stop before remote work.
+If any required section is incomplete or any adaptation check fails, stop before remote work.

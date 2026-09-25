@@ -13,6 +13,9 @@ convenient.
 ├── APPLICATION.md
 ├── README.md
 ├── workflow/
+├── tasks/
+│   ├── README.md
+│   └── TASK-XXX.md
 ├── builds/
 │   ├── README.md
 │   ├── source/
@@ -60,6 +63,8 @@ workflow directories.
 
 - `workflow/`: reusable workflow rules and templates. Read every numbered file
   before workflow action.
+- `tasks/`: persistent handoff between the Strategic Analyst and Codex. Each
+  bounded strategic action has one task file, such as `TASK-001.md`.
 - `builds/source/`: application source cloned or copied for building different
   compilation methods. Follow the project rule for where source is acquired.
 - `builds/build-scripts/`: reusable build scripts, build READMEs, PBS outputs,
@@ -105,6 +110,49 @@ records, and support failed or incomplete attempts when metadata permits.
 Generate `RESULTS.md` from the CSV. `planning/PLANS.md` and detailed analysis
 files are created or updated only in the applicable planning or authorized
 analysis workflow.
+
+## Task and analysis contract
+
+One bounded strategic action corresponds to one task file under `tasks/`.
+The task file is the persistent handoff between the Strategic Analyst and
+Codex and contains only:
+
+1. `STRATEGIC SPECIFICATION`, written by the Strategic Analyst and approved by
+   the Human Leader;
+2. `CODEX EXECUTION REPORT`, appended by Codex after execution.
+
+Raw benchmark, probe, profiling, PBS, and result evidence stays in its
+existing canonical location. Task files reference that evidence rather than
+duplicating it. Worker communication inside the execution layer is transient;
+per-worker task and report Markdown files are not part of this workflow.
+
+Strategic analysis remains under `planning/analysis/`. Analysis files use this
+simplified contract:
+
+```markdown
+---
+task_id: ...
+title: ...
+analysis_id: ...
+status: ...
+parent_task: ...
+created: ...
+last_updated: ...
+---
+
+# Analysis — <Title>
+
+## 1. Summary
+
+...
+
+## 2. Analysis
+
+...
+```
+
+The internal structure of `## 2. Analysis` is flexible and should fit the
+question and evidence.
 
 ## Naming contract
 

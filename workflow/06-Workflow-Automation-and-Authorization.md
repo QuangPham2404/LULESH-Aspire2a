@@ -4,24 +4,40 @@ This file defines the reusable authorization boundaries. It does not grant
 project-specific permissions. The active project's root `AGENTS.md` must list
 any specially authorized commands, prefixes, paths, and restrictions.
 
+An approved `tasks/TASK-XXX.md` defines the maximum execution scope for Codex
+for that task. The Strategic Analyst proposes the task, the Human Leader
+approves it, and Codex executes only the approved scope.
+
 ## Actions normally within routine workflow scope
 
-When explicitly required by the current user-requested workflow and permitted
-by the project `AGENTS.md`, routine actions may include:
+Within the approved task scope, and when permitted by the project `AGENTS.md`,
+Codex may autonomously:
 
-- read-only Git inspection;
-- adding reviewed current-workflow files;
-- committing reviewed scripts, plans, progress, metadata, logs, and extracted
-  results;
-- fast-forward synchronization;
-- syntax checks;
-- creating designated build, experiment, script, and output directories;
-- submitting reviewed PBS build, run, and read-only probe scripts;
-- bounded scheduler inspection;
-- retrieving generated outputs into matching local directories.
+- decompose the work;
+- select the number of workers;
+- identify dependencies and run independent work in parallel;
+- issue bounded follow-up worker tasks;
+- perform operational validation;
+- calculate mechanical derived values;
+- inspect and organize evidence;
+- perform the routine Git, syntax-check, directory, PBS, scheduler, and output
+  retrieval actions already permitted by project policy.
 
 The project instructions must define the actual command forms and approved
 prefixes. Do not infer that permission from this reusable pack alone.
+
+## Actions outside autonomous Codex authority
+
+Codex may not autonomously:
+
+- expand the allowed command or action set;
+- submit additional jobs not approved by the task;
+- change resource, launcher, or transport configuration unless approved;
+- change the scientific question;
+- begin a new optimization direction;
+- perform strategic interpretation.
+
+If any of these is required, stop and report the exact additional authority.
 
 ## Actions requiring explicit permission or user direction
 
@@ -41,6 +57,23 @@ Stop and request direction before:
 The project `AGENTS.md` may be stricter. It must not weaken universal safety
 rules in this pack.
 
+## Authority inheritance
+
+Authority narrows at each layer:
+
+```text
+Human-approved task scope
+        ↓
+Codex authority
+        ↓
+Worker authority
+```
+
+Worker authority may never exceed Codex authority, and Codex authority may never
+exceed the approved task scope. Codex communicates with workers through
+transient prompts or sessions; per-worker task and report files should not
+normally be created.
+
 ## Authorization scope
 
 Authorization is limited to the named project, cluster scope, current task,
@@ -51,4 +84,6 @@ next experiment. `OVERRID_AUTO_PATCH` authorizes only its named error class,
 action, scope, and restrictions.
 
 Never treat a recommendation, progress note, analysis conclusion, or proposed
-fix as authorization.
+fix as authorization. If finishing a task requires broader scope, Codex must
+stop and report exactly which additional action, command, resource, or
+configuration authority is required.
