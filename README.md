@@ -2,19 +2,18 @@
 
 Application GitHub link: https://github.com/LLNL/LULESH
 
-This repository is a flexible blueprint for Codex-assisted HPC optimization
-work. The exact files can change by application, but the workflow should stay
-consistent:
+This repository supports Codex-assisted HPC optimization through the task-based
+workflow in `workflow/` v2:
 
-1. Discuss optimization ideas and choose experiments to test.
-2. Prepare build scripts, run scripts, and result extraction scripts.
-3. Review non-routine scripts before submission.
-4. Submit compute work through PBS on Aspire2A.
-5. Record errors, metadata, raw output, and validation details.
-6. Extract result files from raw experiment output.
-7. When authorized with `ANALYSE_RESULTS`, copy selected result data into a
-   direction-specific analysis file, analyze it, update the planning tracker,
-   and choose the next experiment.
+1. The Strategic Analyst drafts a bounded task in `tasks/TASK-XXX.md`; the
+   Human Leader reviews and approves it.
+2. Codex prepares and executes only the approved scope, using PBS for compute
+   work.
+3. Record raw evidence, metadata, validation, and extracted results in their
+   documented project locations.
+4. After the Human Leader authorizes `ANALYSE_RESULTS`, the Strategic Analyst
+   analyzes the selected evidence and presents findings. The Human Leader
+   decides whether to approve a next task.
 
 The local PC and Aspire2A should both use real Git clones of this repository.
 The Aspire2A clone is the working copy for remote builds and batch execution,
