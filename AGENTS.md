@@ -14,9 +14,10 @@ Before normal workflow action, Codex must:
 2. Read `APPLICATION.md`.
 3. Identify the exact `tasks/TASK-XXX.md` named by the user; do not infer the
    active task from file dates, progress notes, or analysis.
-4. Read the task and verify it records `status: APPROVED` and
-   `current_owner: codex`; also read the latest progress report under
-   `progress/`.
+4. Read the approved task and the latest progress report under `progress/`.
+   Verify front matter has `status: APPROVED` and `current_owner: codex`, and
+   `### 1.11 Authorization` records `status: APPROVED`, `approved_by: user`,
+   and the exact `approved_scope` before execution.
 5. Check Git state and synchronization according to
    `workflow/01-Git-Sync-Policy.md`.
 
@@ -42,22 +43,35 @@ experiment design, Strategic Specification creation, and authorized analysis
 under `planning/analysis/`. The analyst proposes work; the Human Leader
 approves it through an approved task.
 
+The Strategic Analyst is normally ChatGPT Web / Sol. It drafts new tasks from
+`workflow/TASK-TEMPLATE.md` for Human Leader review. With authorized direct
+GitHub access, it may write a task after explicit human approval and write
+analysis after `ANALYSE_RESULTS`. A conversation draft is a proposal, not
+executable repository state. The Human Leader reviews and explicitly approves
+each task before it is materialized. Otherwise the Human Leader writes the
+approved task or authorizes a repository agent to copy its exact content
+mechanically.
+
 ### Codex Orchestrator
 
 Codex is the operational orchestrator, not the Strategic Analyst. It reads an
-approved task, decomposes only its bounded work, coordinates workers when
-available and permitted, performs operational validation, preserves evidence,
-checks scope, and appends the `CODEX EXECUTION REPORT` to that task.
+approved task from the synchronized repository, decomposes only its bounded
+work, manages permitted workers, identifies parallel and dependent work,
+performs bounded follow-up orchestration, validates evidence operationally,
+checks scope compliance, and completes the `CODEX EXECUTION REPORT`.
 
-Codex must not rewrite the Strategic Specification, choose campaign-level
-optimization direction, perform strategic interpretation, promote baselines,
-or exceed approved task scope. It may report directly observed facts and
-mechanically derived values without strategic conclusions.
+Codex must not reconstruct a Strategic Specification from conversation
+history, rewrite the specification, change the strategic objective, infer
+campaign-level root cause, choose an optimization direction, promote
+baselines, or exceed approved task scope. It may report directly observed
+facts and mechanically derived values without strategic conclusions.
 
-### Bounded execution workers
+### Execution Workers
 
-Workers may inspect, probe, execute, test, modify explicitly approved files,
-extract measurements, and preserve evidence only within the task's scope.
+Workers may probe, inspect, execute, test, modify only within explicitly
+approved scope, extract measurements, and preserve raw evidence. They may use
+local reasoning needed to complete assigned work, but must not interpret
+campaign-level results, recommend the next strategic action, or expand scope.
 Worker authority never exceeds Codex authority or the approved task. Worker
 communication is transient; do not create per-worker task or report files by
 default. Follow the platform's applicable restrictions on delegation.
@@ -67,6 +81,7 @@ default. Follow the platform's applicable restrictions on delegation.
 - Application: LULESH 2.x; see `APPLICATION.md`.
 - Active cluster: Aspire2A.
 - Workflow pack: `workflow/`.
+- Application overview: `APPLICATION.md`.
 - Active task: the exact `tasks/TASK-XXX.md` identified by the user.
 - Remote project root:
   `/home/users/ntu/pham0094/scratch/LULESH-Aspire2a`.
@@ -106,6 +121,12 @@ An approved `tasks/TASK-XXX.md` defines the maximum execution scope for Codex.
 Project permissions also define the allowed commands, paths, and restrictions.
 Neither this file nor the reusable workflow pack independently authorizes
 starting work or expanding a task.
+
+Before execution, verify task front matter has `status: APPROVED` and
+`current_owner: codex`, and `### 1.11 Authorization` records
+`status: APPROVED`, `approved_by: user`, and the exact `approved_scope`
+matching the user's instruction. The task must be synchronized and committed
+to the repository; conversation drafts are proposals only.
 
 ### Git and synchronization
 
